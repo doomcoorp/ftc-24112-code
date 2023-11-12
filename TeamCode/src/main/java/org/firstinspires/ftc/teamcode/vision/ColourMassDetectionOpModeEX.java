@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.vision;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.mercurialftc.mercurialftc.scheduler.OpModeEX;
 import org.opencv.core.Scalar;
 
 @Disabled // remove this line to have this show up on your robot
