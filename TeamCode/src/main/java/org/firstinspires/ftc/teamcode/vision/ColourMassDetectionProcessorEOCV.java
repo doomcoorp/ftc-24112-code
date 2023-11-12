@@ -39,7 +39,7 @@ public class ColourMassDetectionProcessor implements VisionProcessor {
 	private PropPositions previousPropPosition;
 	private PropPositions recordedPropPosition = PropPositions.UNFOUND;
 	
-	/**
+	/*
 	 * Uses HSVs for the scalars
 	 *
 	 * @param lower   the lower masked bound, a three a value scalar in the form of a HSV
