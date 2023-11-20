@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.vision;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -10,6 +10,7 @@ import org.opencv.core.Scalar;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 @Autonomous
 public class ColourMassDetectionOpMode extends OpMode {
@@ -41,64 +42,36 @@ public class ColourMassDetectionOpMode extends OpMode {
 
 	static final int isRedField = -1;        // this allows to mirror the mode for the blue field = -1
 
-	public void preloadPixels() {
-		hand_servo.setPosition(-1);
-		arm2_servo.setPosition(-1);
-		sleep(2000);
-		hand_servo.setPosition(1);
-		sleep(800);
-
-		arm2_servo.setPosition(1);
-	}
-
-	public void placePurplePickYellowPixel() {
-		// lower arm 2
-		arm2_servo.setPosition(-1);
-		sleep(1500); // needed to close the hand when ready
-
-		// open hand and drop both pixels
-		hand_servo.setPosition(-1);
-		sleep(800);
-
-		// go back 3.5 in (pixel width), so that you can pick up the yellow pixel
-		encoderDrive(DRIVE_SPEED, -3.5, -3.5, 5.0);
-
-		// close hand to pick up yellow pixel and raise arm 2
-		hand_servo.setPosition(1);
-		sleep(800);
-		arm2_servo.setPosition(1);
-	}
-
-	@Override
+@Override
 	public void init() {
-		preloadPixels();
+		// the current range set by lower and upper is the full range
+		// HSV takes the form: (HUE, SATURATION, VALUE)
+		// which means to select our colour, only need to change HUE
+		// the domains are: ([0, 180], [0, 255], [0, 255])
+		// this is tuned to detect red, so you will need to experiment to fine tune it for your robot
+		// and experiment to fine tune it for blue
+		Scalar lower = new Scalar(150, 100, 100); // the lower hsv threshold for your detection
+		Scalar upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
+		double minArea = 100; // the minimum area for the detection to consider for your prop
+
+		colourMassDetectionProcessor = new ColourMassDetectionProcessor(
+				lower,
+				upper,
+				() -> minArea,
+				() -> 213,
+				() -> 426
+		);
+		visionPortal = new VisionPortal.Builder()
+				.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1")) // the camera on your robot is named "Webcam 1" by default
+				.addProcessor(colourMassDetectionProcessor)
+				.build();
+
+		// you may also want to take a look at some of the examples for instructions on
+		// how to have a switchable camera (switch back and forth between two cameras)
+		// or how to manually edit the exposure and gain, to account for different lighting conditions
+		// these may be extra features for you to work on to ensure that your robot performs
+		// consistently, even in different environments
 	}
-
-	// the current range set by lower and upper is the full range
-	// HSV takes the form: (HUE, SATURATION, VALUE)
-	// which means to select our colour, only need to change HUE
-	// the domains are: ([0, 180], [0, 255], [0, 255])
-	// this is tuned to detect red, so you will need to experiment to fine tune it for your robot
-	// and experiment to fine tune it for blue
-	Scalar lower = new Scalar(150, 100, 100); // the lower hsv threshold for your detection
-	Scalar upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
-	double minArea = 100; // the minimum area for the detection to consider for your prop
-
-	colourMassDetectionProcesor =new ColourMassDetectionProcessor(lower, upper, () ->minArea,()->213,()->426);
-	visionPortal =new VisionPortal.Builder();
-	void setCamera(hardwareMap.get(WebcamName.class, "Webcam 1")) // the camera on your robot is named "Webcam 1" by default.
-
-	addProcessor(colourMassDetectionProcessor);
-
-
-	build();
-	// you may also want to take a look at some of the examples for instructions on
-	// how to have a switchable camera (switch back and forth between two cameras)
-	// or how to manually edit the exposure and gain, to account for different lighting conditions
-	// these may be extra features for you to work on to ensure that your robot performs
-	// consistently, even in different environments
-
-	
 	/**
 	 * User-defined init_loop method
 	 * <p>
@@ -145,30 +118,20 @@ public class ColourMassDetectionOpMode extends OpMode {
 		// now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
 		switch (recordedPropPosition) {
 			case LEFT:
-				// code to do if we saw the prop on the left
 				break;
 			case UNFOUND:
-
-				// we can also just add the unfound case here to do fallthrough intstead of the overriding method above, whatever you prefer!
+				break;
 			case MIDDLE:
 				leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
 				rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-
 				right_arm = hardwareMap.get(DcMotor.class, "right_arm");
 				left_arm = hardwareMap.get(DcMotor.class, "left_arm");
 				hand_servo = hardwareMap.get(Servo.class, "hand_servo");
 				arm2_servo = hardwareMap.get(Servo.class, "arm2_servo");
-
-
-				// To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
-				// When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
-				// Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
 				leftDrive.setDirection(DcMotor.Direction.REVERSE);
 				rightDrive.setDirection(DcMotor.Direction.FORWARD);
-
 				leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 				rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
 				leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 				rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -179,10 +142,9 @@ public class ColourMassDetectionOpMode extends OpMode {
 				telemetry.update();
 
 				// preload the yellow and purple pixels
-				preloadPixels();
 
 				// Wait for the game to start (driver presses PLAY)
-				waitForStart();
+				//waitForStart();
 
 				// Step through each leg of the path,
 				// Note: Reverse movement is obtained by setting a negative distance (not speed)
@@ -232,6 +194,11 @@ public class ColourMassDetectionOpMode extends OpMode {
 	 * This method will be called repeatedly during the period between when
 	 * the play button is pressed and when the OpMode is stopped.
 	 */
+	@Override
+	public void loop() {
+
+	}
+
 	@Override
 	public void stop() {
 			// this closes down the portal when we stop the code, its good practice!
