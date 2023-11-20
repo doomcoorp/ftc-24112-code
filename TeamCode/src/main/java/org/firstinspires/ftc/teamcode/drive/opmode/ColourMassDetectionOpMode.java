@@ -1,19 +1,21 @@
-package org.firstinspires.ftc.teamcode.vision;
+package org.firstinspires.ftc.teamcode.drive.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.opencv.core.Scalar;
 
-@Disabled // remove this line to have this show up on your robot
-@Autonomous
+@Autonomous(group="drive")
 public class ColourMassDetectionOpMode extends OpMode {
 	private VisionPortal visionPortal;
 	private ColourMassDetectionProcessor colourMassDetectionProcessor;
-	
+	private int     myExposure  ;
+	private int    myGain;
+
+
 	/**
 	 * User-defined init method
 	 * <p>
@@ -26,11 +28,11 @@ public class ColourMassDetectionOpMode extends OpMode {
 		// which means to select our colour, only need to change HUE
 		// the domains are: ([0, 180], [0, 255], [0, 255])
 		// this is tuned to detect red, so you will need to experiment to fine tune it for your robot
-		// and experiment to fine tune it for blue
 		Scalar lower = new Scalar(150, 100, 100); // the lower hsv threshold for your detection
 		Scalar upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
-		double minArea = 100; // the minimum area for the detection to consider for your prop
-		
+		double minArea = 2000; // the minimum area for the detection to consider for your prop
+
+
 		colourMassDetectionProcessor = new ColourMassDetectionProcessor(
 				lower,
 				upper,
@@ -61,10 +63,15 @@ public class ColourMassDetectionOpMode extends OpMode {
 	 */
 	@Override
 	public void init_loop() {
+	double MEGABOMBA = colourMassDetectionProcessor.getLargestContourX();
 		telemetry.addData("Currently Recorded Position", colourMassDetectionProcessor.getRecordedPropPosition());
 		telemetry.addData("Camera State", visionPortal.getCameraState());
 		telemetry.addData("Currently Detected Mass Center", "x: " + colourMassDetectionProcessor.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
-		telemetry.addData("Currently Detected Mass Area", colourMassDetectionProcessor.getLargestContourArea());
+		telemetry.addLine(String.valueOf(MEGABOMBA));
+		if(colourMassDetectionProcessor.getLargestContourX() == -1) {
+			telemetry.addData("UNFOUINDED", "x: " + colourMassDetectionProcessor.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
+		}
+
 	}
 	
 	/**
@@ -89,9 +96,7 @@ public class ColourMassDetectionOpMode extends OpMode {
 		
 		// now we can use recordedPropPosition to determine where the prop is! if we never saw a prop, your recorded position will be UNFOUND.
 		// if it is UNFOUND, you can manually set it to any of the other positions to guess
-		if (recordedPropPosition == ColourMassDetectionProcessor.PropPositions.UNFOUND) {
-			recordedPropPosition = ColourMassDetectionProcessor.PropPositions.MIDDLE;
-		}
+
 		
 		// now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
 		switch (recordedPropPosition) {
