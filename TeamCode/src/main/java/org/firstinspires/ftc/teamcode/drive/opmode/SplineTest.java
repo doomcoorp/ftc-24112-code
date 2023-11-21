@@ -8,9 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-/*
- * This is an example of a more complex path to really test the tuning.
- */
+
 @Autonomous(group = "drive")
 public class SplineTest extends LinearOpMode {
     @Override

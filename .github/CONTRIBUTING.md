@@ -15,16 +15,16 @@ If you are looking at this button then you've pushed some changes to your team's
 The vast majority of pull requests seen on the ftctechnh/ftc_app repository are not intended to be merged into the official SDK.  Team software is just that, your team's.  It's specific to the tasks you are trying to accomplish, the testing you are doing, and goals your team has.  You don't want that pushed into the official SDK.
 
 If what you've read so far makes little sense, there are some very good git learning resources online.  
-[Git Book](https://git-scm.com/book/en/v2)  
-[Interactive Git Tutorial](https://try.github.io)
+[Git Book](https:
+[Interactive Git Tutorial](https:
 
 ### Guidlines for experienced GIT users.
 
 If you are absolutely certain that you want to push the big green button above, read on.  Otherwise back _slowly away from keyboard_.
 
-The real intent for advanced users is often to issue a pull request from the [branch](https://www.atlassian.com/git/tutorials/using-branches/git-branch) on a local fork back to master on either the same local fork or a child of the team fork and not on the parent ftctechnh/ftc_app.  See [Creating a Pull Request](https://help.github.com/articles/creating-a-pull-request-from-a-fork/).
+The real intent for advanced users is often to issue a pull request from the [branch](https:
 
-If that is indeed the intent, then you can merge your [topic branch](https://git-scm.com/book/en/v2/Git-Branching-Branching-Workflows#Topic-Branches) into master locally by hand before pushing it up to github, or if you want a pull request for pulls between branches on the same repository because, say, you want team members to look at your software before merging into master, you can select the base fork from the dropdown on the "Open a pull request" page and select your team repo instead of ftctechnh's.
+If that is indeed the intent, then you can merge your [topic branch](https:
 
 Alternatively, if you have a team repository forked from ftctechnh/ftc_app, and then team members individually fork from your team repository, then pull requests from the individual team member's forks will have the main team repository automatically selected as the base fork for the pull. And you won't inadvertently request to pull your team software into ftctechnh's repository.
 
@@ -38,9 +38,9 @@ This section guides you through filing a bug report.  The better the report the 
 
 #### Before submitting a bug report
 
-- Check the [forums](http://ftcforum.firstinspires.org/forum.php) to see if someone else has run into the problem and whether there is an official solution that doesn't require a new SDK.
+- Check the [forums](http:
 
-- Perform a search of current [issues](https://github.com/FIRST-Tech-Challenge/FtcRobotController/issues) to see if the problem has already been reported.  If so, add a comment to the existing issue instead of creating a new one.
+- Perform a search of current [issues](https:
 
 #### How Do I Submit A (Good) Bug Report?
 
@@ -55,7 +55,7 @@ Explain the problem and include additional details to help maintainers reproduce
 
 - Describe the behavior you observed after following the steps and point out what exactly is the problem with that behavior. Explain which behavior you expected to see instead and why. If applicable, include screenshots which show you following the described steps and clearly demonstrate the problem.
 
-- If you're reporting that the RobotController crashed, include the logfile with a stack trace of the crash.  [Example of good bug report with stack trace](https://github.com/ftctechnh/ftc_app/issues/224)
+- If you're reporting that the RobotController crashed, include the logfile with a stack trace of the crash.  [Example of good bug report with stack trace](https:
 
 - If the problem wasn't triggered by a specific action, describe what you were doing before the problem happened and share more information using the guidelines below.
 

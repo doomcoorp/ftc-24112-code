@@ -28,25 +28,11 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 import java.util.Objects;
 
-/*
- * This routine is designed to tune the open-loop feedforward coefficients. Although it may seem unnecessary,
- * tuning these coefficients is just as important as the positional parameters. Like the other
- * manual tuning routines, this op mode relies heavily upon the dashboard. To access the dashboard,
- * connect your computer to the RC's WiFi network. In your browser, navigate to
- * https://192.168.49.1:8080/dash if you're using the RC phone or https://192.168.43.1:8080/dash if
- * you are using the Control Hub. Once you've successfully connected, start the program, and your
- * robot will begin moving forward and backward according to a motion profile. Your job is to graph
- * the velocity errors over time and adjust the feedforward coefficients. Once you've found a
- * satisfactory set of gains, add them to the appropriate fields in the DriveConstants.java file.
- *
- * Pressing Y/Δ (Xbox/PS4) will pause the tuning process and enter driver override, allowing the
- * user to reset the position of the bot in the event that it drifts off the path.
- * Pressing B/O (Xbox/PS4) will cede control back to the tuning process.
- */
+
 @Config
 @Autonomous(group = "drive")
 public class ManualFeedforwardTuner extends LinearOpMode {
-    public static double DISTANCE = 72; // in
+    public static double DISTANCE = 72;
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
 
@@ -104,11 +90,11 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                         mode = Mode.DRIVER_MODE;
                     }
 
-                    // calculate and set the motor power
+
                     double profileTime = clock.seconds() - profileStart;
 
                     if (profileTime > activeProfile.duration()) {
-                        // generate a new profile
+
                         movingForwards = !movingForwards;
                         activeProfile = generateProfile(movingForwards);
                         profileStart = clock.seconds();
@@ -125,7 +111,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                     Pose2d poseVelo = Objects.requireNonNull(drive.getPoseVelocity(), "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer.");
                     double currentVelo = poseVelo.getX();
 
-                    // update telemetry
+
                     telemetry.addData("targetVelocity", motionState.getV());
                     telemetry.addData("measuredVelocity", currentVelo);
                     telemetry.addData("error", motionState.getV() - currentVelo);

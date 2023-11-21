@@ -174,7 +174,7 @@ public final class LogFiles {
         public void onOpModePreInit(OpMode opMode) {
             log = new LogFile(opMode.getClass().getCanonicalName());
 
-            // clean up old files
+
             File[] fs = Objects.requireNonNull(ROOT.listFiles());
             Arrays.sort(fs, (a, b) -> Long.compare(a.lastModified(), b.lastModified()));
             long totalSizeBytes = 0;
@@ -202,7 +202,7 @@ public final class LogFiles {
             log.nsStop = System.nanoTime();
 
             if (!(opMode instanceof OpModeManagerImpl.DefaultOpMode)) {
-                //noinspection ResultOfMethodCallIgnored
+
                 ROOT.mkdirs();
 
                 String filename = dateFormat.format(new Date(log.msInit)) + "__" + opMode.getClass().getSimpleName() + ".json";
@@ -219,11 +219,11 @@ public final class LogFiles {
 
     @WebHandlerRegistrar
     public static void registerRoutes(Context context, WebHandlerManager manager) {
-        //noinspection ResultOfMethodCallIgnored
+
         ROOT.mkdirs();
 
-        // op mode manager only stores a weak reference, so we need to keep notifHandler alive ourselves
-        // don't use @OnCreateEventLoop because it's unreliable
+
+
         OpModeManagerImpl.getOpModeManagerOfActivity(
                 AppUtil.getInstance().getActivity()
         ).registerListener(notifHandler);

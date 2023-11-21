@@ -49,9 +49,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kA;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kStatic;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
 
-/*
- * Simple tank drive hardware implementation for REV hardware.
- */
+
 @Config
 public class SampleTankDrive extends TankDrive {
     public static PIDCoefficients AXIAL_PID = new PIDCoefficients(0, 0, 0);
@@ -87,13 +85,13 @@ public class SampleTankDrive extends TankDrive {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
-        // TODO: adjust the names of the following hardware devices to match your configuration
+
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
 
-        // add/remove motors depending on your robot (e.g., 6WD)
+
         DcMotorEx leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         DcMotorEx leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
         DcMotorEx rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
@@ -119,10 +117,10 @@ public class SampleTankDrive extends TankDrive {
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
         }
 
-        // TODO: reverse any motors using DcMotor.setDirection()
 
-        // TODO: if desired, use setLocalizer() to change the localization method
-        // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
+
+
+
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(
                 follower, HEADING_PID, batteryVoltageSensor,
@@ -231,7 +229,7 @@ public class SampleTankDrive extends TankDrive {
         Pose2d vel = drivePower;
 
         if (Math.abs(drivePower.getX()) + Math.abs(drivePower.getHeading()) > 1) {
-            // re-normalize the powers according to the weights
+
             double denom = VX_WEIGHT * Math.abs(drivePower.getX())
                     + OMEGA_WEIGHT * Math.abs(drivePower.getHeading());
 
@@ -241,7 +239,7 @@ public class SampleTankDrive extends TankDrive {
                     OMEGA_WEIGHT * drivePower.getHeading()
             ).div(denom);
         } else {
-            // Ensure the y axis is zeroed out.
+
             vel = new Pose2d(drivePower.getX(), 0, drivePower.getHeading());
         }
 

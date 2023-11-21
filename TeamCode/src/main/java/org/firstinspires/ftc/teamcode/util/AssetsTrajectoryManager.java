@@ -13,14 +13,10 @@ import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Set of utilities for loading trajectories from assets (the plugin save location).
- */
+
 public class AssetsTrajectoryManager {
 
-    /**
-     * Loads the group config.
-     */
+    
     public static @Nullable
     TrajectoryGroupConfig loadGroupConfig() {
         try {
@@ -32,9 +28,7 @@ public class AssetsTrajectoryManager {
         }
     }
 
-    /**
-     * Loads a trajectory config with the given name.
-     */
+    
     public static @Nullable TrajectoryConfig loadConfig(String name) {
         try {
             InputStream inputStream = AppUtil.getDefContext().getAssets().open(
@@ -45,9 +39,7 @@ public class AssetsTrajectoryManager {
         }
     }
 
-    /**
-     * Loads a trajectory builder with the given name.
-     */
+    
     public static @Nullable TrajectoryBuilder loadBuilder(String name) {
         TrajectoryGroupConfig groupConfig = loadGroupConfig();
         TrajectoryConfig config = loadConfig(name);
@@ -57,9 +49,7 @@ public class AssetsTrajectoryManager {
         return config.toTrajectoryBuilder(groupConfig);
     }
 
-    /**
-     * Loads a trajectory with the given name.
-     */
+    
     public static @Nullable Trajectory load(String name) {
         TrajectoryBuilder builder = loadBuilder(name);
         if (builder == null) {

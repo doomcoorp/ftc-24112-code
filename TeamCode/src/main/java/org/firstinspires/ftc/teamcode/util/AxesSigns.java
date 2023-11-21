@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.util;
 
-/**
- * IMU axes signs in the order XYZ (after remapping).
- */
+
 public enum AxesSigns {
     PPP(0b000),
     PPN(0b001),

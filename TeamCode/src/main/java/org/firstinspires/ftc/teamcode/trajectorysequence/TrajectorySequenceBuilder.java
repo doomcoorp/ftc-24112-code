@@ -512,14 +512,14 @@ public class TrajectorySequenceBuilder {
     ) {
         ArrayList<TrajectoryMarker> trajectoryMarkers = new ArrayList<>();
 
-        // Convert temporal markers
+
         for (TemporalMarker marker : temporalMarkers) {
             trajectoryMarkers.add(
                     new TrajectoryMarker(marker.getProducer().produce(currentDuration), marker.getCallback())
             );
         }
 
-        // Convert displacement markers
+
         for (DisplacementMarker marker : displacementMarkers) {
             double time = displacementToTime(
                     sequenceSegments,
@@ -534,7 +534,7 @@ public class TrajectorySequenceBuilder {
             );
         }
 
-        // Convert spatial markers
+
         for (SpatialMarker marker : spatialMarkers) {
             trajectoryMarkers.add(
                     new TrajectoryMarker(
@@ -609,8 +609,8 @@ public class TrajectorySequenceBuilder {
         return sequenceSegments;
     }
 
-    // Taken from Road Runner's TrajectoryGenerator.displacementToTime() since it's private
-    // note: this assumes that the profile position is monotonic increasing
+
+
     private Double motionProfileDisplacementToTime(MotionProfile profile, double s) {
         double tLo = 0.0;
         double tHi = profile.duration();
