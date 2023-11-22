@@ -103,41 +103,55 @@ public class OpenCVAutonomous extends LinearOpMode {
 
 
         waitForStart();
-        while(opModeIsActive() && !isStopRequested()) {
+        while (opModeIsActive() && !isStopRequested()) {
             double telemetryTest = colourMassDetectionProcessor.getLargestContourX();
             telemetry.addData("Currently Recorded Position", colourMassDetectionProcessor.getRecordedPropPosition());
             telemetry.addData("Camera State", visionPortal.getCameraState());
             telemetry.addData("Currently Detected Mass Center", "x: " + colourMassDetectionProcessor.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
             telemetry.addLine(String.valueOf(telemetryTest));
-            if(colourMassDetectionProcessor.getLargestContourX() == -1) {
-                telemetry.addData("Unfound", "x: " + colourMassDetectionProcessor.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
+            if (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING) {
+                visionPortal.stopLiveView();
+                visionPortal.stopStreaming();
+            }
+            ColourMassDetectionProcessor.PropPositions recordedPropPosition = colourMassDetectionProcessor.getRecordedPropPosition();
+
+            if (recordedPropPosition == ColourMassDetectionProcessor.PropPositions.UNFOUND) {
+                recordedPropPosition = ColourMassDetectionProcessor.PropPositions.RIGHT;
+            }
+            switch (recordedPropPosition) {
+                case LEFT:
+                    break;
+                case MIDDLE:
+                    encoderDrive(DRIVE_SPEED, 24, 24, 5.0);
+                    encoderDrive(TURN_SPEED, isRedField * 2, isRedField * -2, 2.0);
+                    placePurplePickYellowPixel();
+
+
+                    encoderDrive(TURN_SPEED, isRedField * -6, isRedField * 6, 4.0);
+                    encoderDrive(DRIVE_SPEED, -12, -12, 2.0);
+                    encoderDrive(TURN_SPEED, isRedField * -12, isRedField * 12, 4.0);
+                    encoderDrive(DRIVE_SPEED, -19, -19, 5.0);
+
+
+                    encoderDrive(TURN_SPEED, isRedField * 6, isRedField * -6, 4.0);
+                    encoderDrive(DRIVE_SPEED, -12, -12, 5.0);
+                    placePixelOnBackdrop(1);
+
+
+                    encoderDrive(TURN_SPEED, isRedField * 11, isRedField * -11, 4.0);
+                    encoderDrive(DRIVE_SPEED, -20, -20, 5.0);
+                    encoderDrive(TURN_SPEED, isRedField * -11, isRedField * 11, 4.0);
+                    encoderDrive(DRIVE_SPEED, -15, -15, 5.0);
+
+
+                    telemetry.addData("Path", "Complete");
+                    telemetry.update();
+                    sleep(1000);
+                    break;
+                case RIGHT:
+                    break;
             }
         }
-        encoderDrive(DRIVE_SPEED, 24, 24, 5.0);
-        encoderDrive(TURN_SPEED, isRedField * 2, isRedField * -2, 2.0);
-        placePurplePickYellowPixel();
-
-
-        encoderDrive(TURN_SPEED, isRedField * -6, isRedField * 6, 4.0);
-        encoderDrive(DRIVE_SPEED, -12, -12, 2.0);
-        encoderDrive(TURN_SPEED, isRedField * -12, isRedField * 12, 4.0);
-        encoderDrive(DRIVE_SPEED, -19, -19, 5.0);
-
-
-        encoderDrive(TURN_SPEED, isRedField * 6, isRedField * -6, 4.0);
-        encoderDrive(DRIVE_SPEED, -12, -12, 5.0);
-        placePixelOnBackdrop(1);
-
-
-        encoderDrive(TURN_SPEED, isRedField * 11, isRedField * -11, 4.0);
-        encoderDrive(DRIVE_SPEED, -20, -20, 5.0);
-        encoderDrive(TURN_SPEED, isRedField * -11, isRedField * 11, 4.0);
-        encoderDrive(DRIVE_SPEED, -15, -15, 5.0);
-
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-        sleep(1000);
     }
     private boolean    setManualExposure(int exposureMS, int gain) {
 
