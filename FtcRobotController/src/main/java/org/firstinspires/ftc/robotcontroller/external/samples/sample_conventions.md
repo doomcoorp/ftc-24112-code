@@ -39,7 +39,7 @@ After the prefix, other conventions will apply:
 
 Code is formatted as per the Google Style Guide:
 
-https:
+https://google.github.io/styleguide/javaguide.html
 
 With “Sensor” and “Hardware” samples, the code should demonstrate the essential function,
 and not be embellished with too much additional “clever” code.  If a sensor has special

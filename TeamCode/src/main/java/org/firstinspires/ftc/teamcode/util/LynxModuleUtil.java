@@ -8,12 +8,16 @@ import org.firstinspires.ftc.robotcore.internal.system.Misc;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Collection of utilites for interacting with Lynx modules.
+ */
 public class LynxModuleUtil {
 
     private static final LynxFirmwareVersion MIN_VERSION = new LynxFirmwareVersion(1, 8, 2);
 
-    
+    /**
+     * Parsed representation of a Lynx module firmware version.
+     */
     public static class LynxFirmwareVersion implements Comparable<LynxFirmwareVersion> {
         public final int major;
         public final int minor;
@@ -57,7 +61,11 @@ public class LynxModuleUtil {
         }
     }
 
-    
+    /**
+     * Retrieve and parse Lynx module firmware version.
+     * @param module Lynx module
+     * @return parsed firmware version
+     */
     public static LynxFirmwareVersion getFirmwareVersion(LynxModule module) {
         String versionString = module.getNullableFirmwareVersionString();
         if (versionString == null) {
@@ -66,7 +74,7 @@ public class LynxModuleUtil {
 
         String[] parts = versionString.split("[ :,]+");
         try {
-
+            // note: for now, we ignore the hardware entry
             return new LynxFirmwareVersion(
                     Integer.parseInt(parts[3]),
                     Integer.parseInt(parts[5]),
@@ -77,14 +85,19 @@ public class LynxModuleUtil {
         }
     }
 
-    
+    /**
+     * Exception indicating an outdated Lynx firmware version.
+     */
     public static class LynxFirmwareVersionException extends RuntimeException {
         public LynxFirmwareVersionException(String detailMessage) {
             super(detailMessage);
         }
     }
 
-    
+    /**
+     * Ensure all of the Lynx modules attached to the robot satisfy the minimum requirement.
+     * @param hardwareMap hardware map containing Lynx modules
+     */
     public static void ensureMinimumFirmwareVersion(HardwareMap hardwareMap) {
         Map<String, LynxFirmwareVersion> outdatedModules = new HashMap<>();
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
