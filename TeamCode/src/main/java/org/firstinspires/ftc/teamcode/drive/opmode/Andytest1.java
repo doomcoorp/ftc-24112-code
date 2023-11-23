@@ -89,7 +89,7 @@ public class Andytest1 extends LinearOpMode {
     static final double     DRIVE_SPEED             = 0.2; //0.4;
     static final double     TURN_SPEED              = 0.2; //0.5;
     
-    protected int isRedField = 1; //              = 1;        // this allows to mirror the mode for the blue field = -1 
+    protected int isRedField = 1; // this allows to mirror the mode for the blue field = -1
     protected int turnClockWise = 1;
     protected boolean dropYellow = false;
     
@@ -123,7 +123,7 @@ public class Andytest1 extends LinearOpMode {
                           leftDrive.getCurrentPosition(),
                           rightDrive.getCurrentPosition());
         telemetry.update();
-        
+
         // preload the yellow and purple pixels
        preloadPixels();
 
@@ -154,46 +154,51 @@ public class Andytest1 extends LinearOpMode {
         //     move forward 20 inches
         //     turn 45 degree with 8 inches
         //      move forward another 2 inches
-        int moveForwards = 20;
-        int turningInch = 8;
-        int moveExtra = 2;
 
-        turnClockWise = 0;
+        int moveForwards = 20;
+        double turningInch = 8;
+        int moveExtra = 2;
+        int moveCenterClose = 5;
+        boolean isCenter = (turnClockWise == 0);
 
         if (turnClockWise == 0)
         {
-            moveForwards = 12;
-            turningInch = 4;
-            moveExtra = 12;
-            turnClockWise = -1;
+            moveForwards = 22; // Move almost two feet to reach spike mark
+            turningInch = 12.7; // turn 90 degree
+            moveExtra = 4; // align the edge of the spike mark
+            turnClockWise = 1; // turn clockWise
         }
-        
-        int leftTurn = turningInch * turnClockWise;
-        int rightTurn = leftTurn * -1;
-        
+
+        double leftTurn = turningInch * turnClockWise;
+
         // go to spike mark
-        encoderDrive(DRIVE_SPEED,  moveForwards,  moveForwards, 5.0); 
+        encoderDrive(DRIVE_SPEED,  moveForwards,  moveForwards, 5.0);
 
         // turning
-        encoderDrive(TURN_SPEED, leftTurn, rightTurn, 2.0);
+        encoderDrive(TURN_SPEED, leftTurn, leftTurn * -1, 2.0);
 
-
-        // move forward a bit
+        // move forward a bit to get closer to edge of spike mark
+        // for center position, align with edge of spike mark
         encoderDrive(DRIVE_SPEED,  moveExtra,  moveExtra, 2.0);
 
-        // turning
-        encoderDrive(TURN_SPEED, leftTurn * - 1, rightTurn * -1, 2.0);
-        encoderDrive(DRIVE_SPEED,  5,  5, 2.0);
-
+        if (isCenter) {
+            // turning 90 degree back to face spike mark
+            encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 2.0);
+            encoderDrive(DRIVE_SPEED, moveCenterClose, moveCenterClose, 2.0);
+        }
 
         // drop the purple and pick up yellow
         placePurplePickYellowPixel();
-/*
+
         // all the way back to original place
+        if (isCenter) {
+            encoderDrive(DRIVE_SPEED, moveCenterClose * -1, moveCenterClose * -1, 2.0);
+            encoderDrive(TURN_SPEED, leftTurn, leftTurn * -1, 2.0);
+        }
         encoderDrive(DRIVE_SPEED,  moveExtra * -1,  moveExtra * -1, 2.0);
-        encoderDrive(TURN_SPEED, rightTurn, leftTurn, 2.0);
+        encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 2.0);
         encoderDrive(DRIVE_SPEED,  moveForwards * -1,  moveForwards * -1, 5.0);
-        */
+
         
         // in case we are in A4 or F4, let us go to backdrop
         if (dropYellow)
@@ -227,8 +232,8 @@ public class Andytest1 extends LinearOpMode {
         else
         {
             // drop the yellow and wait for menual competition time
-            //placePurplePixel();
-            //arm2_servo.setPosition(1);
+            placePurplePixel();
+            arm2_servo.setPosition(1);
         }
         
         telemetry.addData("Path", "Complete");
