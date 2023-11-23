@@ -33,9 +33,11 @@ public class OpenCVAutonomousBlue extends Andytest1 {
         myExposure = 30;
         myGain = 2;
         setManualExposure(myExposure, myGain);
-        Scalar lower = new Scalar(150, 100, 100);
-        Scalar upper = new Scalar(180, 255, 255);
-        double minArea = 1000;
+        Scalar lower = new Scalar(90, 100, 100);
+        Scalar upper = new Scalar(130, 255, 255);
+        double minArea = 1500;
+        int cDetection = 0;
+
         ColourMassDetectionProcessor.PropPositions recordedPropPosition = ColourMassDetectionProcessor.PropPositions.RIGHT;
 
         colourMassDetectionProcessor = new ColourMassDetectionProcessor(
@@ -50,9 +52,14 @@ public class OpenCVAutonomousBlue extends Andytest1 {
                 .addProcessor(colourMassDetectionProcessor)
                 .build();
 
-        while (!isStarted()) {
-            if (colourMassDetectionProcessor.getLargestContourX() != -1 || colourMassDetectionProcessor.getLargestContourY() != -1) {
+        while (!isStarted() && cDetection < 30000) {
+            cDetection++;
+            if (colourMassDetectionProcessor.getLargestContourX() != -1 && colourMassDetectionProcessor.getLargestContourY() != -1) {
                 recordedPropPosition = colourMassDetectionProcessor.getRecordedPropPosition();
+                if (recordedPropPosition == ColourMassDetectionProcessor.PropPositions.RIGHT) {
+                    recordedPropPosition = ColourMassDetectionProcessor.PropPositions.MIDDLE;
+                }
+                telemetry.addData("position detected", cDetection);
                 telemetry.addData("Currently Recorded Position", recordedPropPosition);
                 telemetry.addData("Camera State", visionPortal.getCameraState());
                 telemetry.addData("Currently Detected Mass Center", "x: " + colourMassDetectionProcessor.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
@@ -64,14 +71,14 @@ public class OpenCVAutonomousBlue extends Andytest1 {
                 telemetry.addData("Currently Detected Mass Area", colourMassDetectionProcessor.getLargestContourArea());
                 recordedPropPosition = ColourMassDetectionProcessor.PropPositions.RIGHT;
             }
+
             getCameraSetting();
             telemetry.addData("Exposure value", myExposure);
             telemetry.update();
         }
-        waitForStart();
 
         // tell red or blue team
-        isRedField = 1; // on the red side (column F)
+        isRedField = -1; // on the blue side (column A)
 
         // stop camera
         visionPortal.stopLiveView();
@@ -88,6 +95,8 @@ public class OpenCVAutonomousBlue extends Andytest1 {
             case MIDDLE:
                 telemetry.addLine("Position on CENTER");
                 telemetry.update();
+                dropYellow = false; // start from row 2
+                turnClockWise = 0; // Team Prop on center
                 break;
             case RIGHT:
                 telemetry.addLine("Position on right");

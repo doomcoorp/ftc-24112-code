@@ -56,8 +56,8 @@ public class ColourMassDetectionOpMode extends OpMode {
 
 
 
-        Scalar lower = new Scalar(150, 100, 100);
-        Scalar upper = new Scalar(180, 255, 255);
+        Scalar lower = new Scalar(90, 100, 100);
+        Scalar upper = new Scalar(130, 255, 255);
         double minArea = 2000;
 
 
