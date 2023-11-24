@@ -158,7 +158,7 @@ public class Andytest1 extends LinearOpMode {
         int moveForwards = 20;
         double turningInch = 8;
         int moveExtra = 2;
-        int moveCenterClose = 5;
+        int moveCenterClose = 8;
         boolean isCenter = (turnClockWise == 0);
 
         if (turnClockWise == 0)
@@ -192,30 +192,42 @@ public class Andytest1 extends LinearOpMode {
 
         // all the way back to original place
         if (isCenter) {
+            if (dropYellow)
+            {
+                moveCenterClose += 4; // back more to the center line vertically
+            }
             encoderDrive(DRIVE_SPEED, moveCenterClose * -1, moveCenterClose * -1, 2.0);
             encoderDrive(TURN_SPEED, leftTurn, leftTurn * -1, 5.0);
         }
-        encoderDrive(DRIVE_SPEED,  moveExtra * -1,  moveExtra * -1, 2.0);
-        encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 5.0);
-        encoderDrive(DRIVE_SPEED,  moveForwards * -1,  moveForwards * -1, 2.0);
 
+        if (!(dropYellow && isCenter)) {
+            // back all the way to starting position
+            encoderDrive(DRIVE_SPEED, moveExtra * -1, moveExtra * -1, 2.0);
+            encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 5.0);
+            encoderDrive(DRIVE_SPEED, moveForwards * -1, moveForwards * -1, 2.0);
+        }
         
         // in case we are in A4 or F4, let us go to backdrop
         if (dropYellow)
         {
             // move horitonal cooridate of the April Tag
             int alignApriTag = 7;
-            if (turnClockWise * isRedField == -1)
-            {
-                // add extra length on horizonal coordinate
-                alignApriTag +=16;
-            }
-            encoderDrive(DRIVE_SPEED,  alignApriTag,  alignApriTag, 3.0);
-            
-            // Turn 90 degree
             double rotate90 = 12.6 * isRedField;
-            encoderDrive(TURN_SPEED, rotate90 * -1, rotate90, 2.0);
-            
+
+            if (isCenter) {
+                alignApriTag += 8; // distance from center to go to border
+            }
+            else {
+                if (turnClockWise * isRedField == -1) {
+                    // add extra length on horizonal coordinate
+                    alignApriTag += 16;
+                }
+                encoderDrive(DRIVE_SPEED, alignApriTag, alignApriTag, 3.0);
+
+                // Turn 90 degree
+                encoderDrive(TURN_SPEED, rotate90 * -1, rotate90, 2.0);
+            }
+
             // go to one feet away from backdrop
             int goToBackDrop = -36;
             encoderDrive(DRIVE_SPEED, goToBackDrop, goToBackDrop, 5.0);
