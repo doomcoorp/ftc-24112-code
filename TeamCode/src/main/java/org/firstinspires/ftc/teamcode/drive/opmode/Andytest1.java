@@ -172,10 +172,10 @@ public class Andytest1 extends LinearOpMode {
         double leftTurn = turningInch * turnClockWise;
 
         // go to spike mark
-        encoderDrive(DRIVE_SPEED,  moveForwards,  moveForwards, 5.0);
+        encoderDrive(DRIVE_SPEED,  moveForwards,  moveForwards, 2.0);
 
         // turning
-        encoderDrive(TURN_SPEED, leftTurn, leftTurn * -1, 2.0);
+        encoderDrive(TURN_SPEED, leftTurn, leftTurn * -1, 5.0);
 
         // move forward a bit to get closer to edge of spike mark
         // for center position, align with edge of spike mark
@@ -183,7 +183,7 @@ public class Andytest1 extends LinearOpMode {
 
         if (isCenter) {
             // turning 90 degree back to face spike mark
-            encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 2.0);
+            encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 5.0);
             encoderDrive(DRIVE_SPEED, moveCenterClose, moveCenterClose, 2.0);
         }
 
@@ -193,11 +193,11 @@ public class Andytest1 extends LinearOpMode {
         // all the way back to original place
         if (isCenter) {
             encoderDrive(DRIVE_SPEED, moveCenterClose * -1, moveCenterClose * -1, 2.0);
-            encoderDrive(TURN_SPEED, leftTurn, leftTurn * -1, 2.0);
+            encoderDrive(TURN_SPEED, leftTurn, leftTurn * -1, 5.0);
         }
         encoderDrive(DRIVE_SPEED,  moveExtra * -1,  moveExtra * -1, 2.0);
-        encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 2.0);
-        encoderDrive(DRIVE_SPEED,  moveForwards * -1,  moveForwards * -1, 5.0);
+        encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 5.0);
+        encoderDrive(DRIVE_SPEED,  moveForwards * -1,  moveForwards * -1, 2.0);
 
         
         // in case we are in A4 or F4, let us go to backdrop
