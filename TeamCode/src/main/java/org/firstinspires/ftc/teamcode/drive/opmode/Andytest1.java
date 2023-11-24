@@ -164,7 +164,7 @@ public class Andytest1 extends LinearOpMode {
         if (turnClockWise == 0)
         {
             moveForwards = 22; // Move almost two feet to reach spike mark
-            turningInch = 12.7; // turn 90 degree
+            turningInch = 12.4; // turn 90 degree
             moveExtra = 4; // align the edge of the spike mark
             turnClockWise = 1; // turn clockWise
         }
