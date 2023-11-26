@@ -125,7 +125,7 @@ public class Andytest1 extends LinearOpMode {
         telemetry.update();
 
         // preload the yellow and purple pixels
-       //preloadPixels();
+       preloadPixels();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -158,21 +158,21 @@ public class Andytest1 extends LinearOpMode {
         int moveForwards = 20;
         double turningInch = 8;
         int moveExtra = 2;
-        int moveCenterClose = 8;
+        int moveCenterClose = 2;
         boolean isCenter = (turnClockWise == 0);
 
         if (turnClockWise == 0)
         {
-            moveForwards = 22; // Move almost two feet to reach spike mark
-            turningInch = 12.4; // turn 90 degree
-            moveExtra = 4; // align the edge of the spike mark
-            turnClockWise = 1; // turn clockWise
+            moveForwards = 24; // Move two feet to reach spike mark
+            turningInch = -12.8; // turn 90 degree
+            moveExtra = 6; // align the edge of the spike mark
+            turnClockWise = 1 * isRedField; // turn clockWise
         }
 
         double leftTurn = turningInch * turnClockWise;
 
         // go to spike mark
-        encoderDrive(DRIVE_SPEED,  moveForwards,  moveForwards, 2.0);
+        encoderDrive(DRIVE_SPEED,  moveForwards,  moveForwards, 5.0);
 
         // turning
         encoderDrive(TURN_SPEED, leftTurn, leftTurn * -1, 5.0);
@@ -192,36 +192,41 @@ public class Andytest1 extends LinearOpMode {
 
         // all the way back to original place
         if (isCenter) {
-            if (dropYellow)
-            {
-                moveCenterClose += 4; // back more to the center line vertically
-            }
             encoderDrive(DRIVE_SPEED, moveCenterClose * -1, moveCenterClose * -1, 2.0);
             encoderDrive(TURN_SPEED, leftTurn, leftTurn * -1, 5.0);
         }
 
-        if (!(dropYellow && isCenter)) {
-            // back all the way to starting position
-            encoderDrive(DRIVE_SPEED, moveExtra * -1, moveExtra * -1, 2.0);
+        // back all the way to starting position
+        if (dropYellow && !isCenter)
+            moveExtra +=2;
+
+        encoderDrive(DRIVE_SPEED, moveExtra * -1, moveExtra * -1, 2.0);
+
+        if (!isCenter || !dropYellow)
             encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 5.0);
+
+        if (!dropYellow)
             encoderDrive(DRIVE_SPEED, moveForwards * -1, moveForwards * -1, 2.0);
-        }
         
         // in case we are in A4 or F4, let us go to backdrop
         if (dropYellow)
         {
             // move horitonal cooridate of the April Tag
-            int alignApriTag = 7;
-            double rotate90 = 12.6 * isRedField;
+            int alignApriTag = -2;
+            int alignParking = 14;
+            double rotate90 = 12.7 * isRedField;
 
             if (isCenter) {
-                alignApriTag += 8; // distance from center to go to border
+                alignApriTag += 10; // distance from center to go to border
+                alignParking += 8;
             }
             else {
                 if (turnClockWise * isRedField == -1) {
                     // add extra length on horizonal coordinate
-                    alignApriTag += 16;
+                    alignApriTag += 18;
+                    alignParking+=16;
                 }
+
                 encoderDrive(DRIVE_SPEED, alignApriTag, alignApriTag, 3.0);
 
                 // Turn 90 degree
@@ -230,6 +235,9 @@ public class Andytest1 extends LinearOpMode {
 
             // go to one feet away from backdrop
             int goToBackDrop = -36;
+            if (!isCenter)
+                goToBackDrop -= 2 * (turnClockWise * isRedField);
+
             encoderDrive(DRIVE_SPEED, goToBackDrop, goToBackDrop, 5.0);
             
             // drop the yellow pixel
@@ -237,9 +245,9 @@ public class Andytest1 extends LinearOpMode {
             
             // go to park
             encoderDrive(TURN_SPEED, rotate90, rotate90 * -1, 2.0); // Turn 90 degrees towards driver station
-            encoderDrive(DRIVE_SPEED,  alignApriTag * -1,  alignApriTag * -1, 3.0); // hrizonal back to the border line
+            encoderDrive(DRIVE_SPEED,  alignParking * -1,  alignParking * -1, 3.0); // hrizonal back to the border line
             encoderDrive(TURN_SPEED, rotate90 * -1, rotate90, 2.0); // Turn 90 degrees towards back to park
-            encoderDrive(DRIVE_SPEED, -24, -24, 5.0);  // Reverse 24 Inches with 5 Sec timeout
+            encoderDrive(DRIVE_SPEED, -12, -12, 5.0);  // Reverse 24 Inches with 5 Sec timeout
         }
         else
         {

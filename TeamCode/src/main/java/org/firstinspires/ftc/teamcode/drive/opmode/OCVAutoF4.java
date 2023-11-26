@@ -35,7 +35,7 @@ public class OCVAutoF4 extends Andytest1 {
         setManualExposure(myExposure, myGain);
         Scalar lower = new Scalar(150, 100, 100);
         Scalar upper = new Scalar(180, 255, 255);
-        double minArea = 1500;
+        double minArea = 3000;
         int cDetection = 0;
 
         ColourMassDetectionProcessor.PropPositions recordedPropPosition = ColourMassDetectionProcessor.PropPositions.RIGHT;

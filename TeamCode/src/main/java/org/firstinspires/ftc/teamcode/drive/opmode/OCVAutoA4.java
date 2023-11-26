@@ -51,7 +51,7 @@ public class OCVAutoA4 extends Andytest1 {
                 .addProcessor(colourMassDetectionProcessor)
                 .build();
 
-        while (!isStarted()){//&& cDetection < 30000)
+        while (!isStarted() && cDetection < 30000) {
             cDetection++;
             if (colourMassDetectionProcessor.getLargestContourX() != -1 && colourMassDetectionProcessor.getLargestContourY() != -1) {
                 recordedPropPosition = colourMassDetectionProcessor.getRecordedPropPosition();
