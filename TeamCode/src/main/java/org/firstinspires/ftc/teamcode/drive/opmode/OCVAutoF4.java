@@ -10,12 +10,11 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.opencv.core.Scalar;
 
 import java.util.concurrent.TimeUnit;
-import java.math.*;
 
 
 
-@Autonomous(name="OpenCVAutonomous", group="Robot")
-public class OpenCVAutonomous extends Andytest1 {
+@Autonomous(name="OCVAutoF4", group="Robot")
+public class OCVAutoF4 extends Andytest1 {
     private int     myExposure  ;
     private int     minExposure ;
     private int     maxExposure ;
@@ -90,26 +89,26 @@ public class OpenCVAutonomous extends Andytest1 {
             case LEFT:
                 telemetry.addLine("Position on LEFT");
                 telemetry.update();
-                dropYellow = false; // start from row 2
+                dropYellow = true; // start from row 4
                 turnClockWise = -1; // Team Prop on left
                 break;
             case MIDDLE:
                 telemetry.addLine("Position on CENTER");
                 telemetry.update();
-                dropYellow = false; // start from row 2
+                dropYellow = true;
                 turnClockWise = 0; // Team Prop on center
                 break;
             case RIGHT:
                 telemetry.addLine("Position on right");
                 telemetry.update();
-                dropYellow = false; // start from row 2
+                dropYellow = true;
                 turnClockWise = 1; // Team Prop on right
                 break;
         }
         telemetry.update();
 
         super.runOpMode();
-        }
+    }
     private boolean    setManualExposure(int exposureMS, int gain) {
 
         if (visionPortal == null) {

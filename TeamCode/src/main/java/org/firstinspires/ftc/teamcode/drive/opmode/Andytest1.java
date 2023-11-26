@@ -60,7 +60,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Tiger test 1", group="Robot")
+@Autonomous(name="Andy test 1", group="Robot")
 
 public class Andytest1 extends LinearOpMode {
 
@@ -125,7 +125,7 @@ public class Andytest1 extends LinearOpMode {
         telemetry.update();
 
         // preload the yellow and purple pixels
-       preloadPixels();
+       //preloadPixels();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
