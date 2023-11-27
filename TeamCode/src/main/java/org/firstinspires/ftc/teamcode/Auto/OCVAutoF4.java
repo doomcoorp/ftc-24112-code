@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -12,8 +12,9 @@ import org.opencv.core.Scalar;
 import java.util.concurrent.TimeUnit;
 
 
-@Autonomous(name="OCVAutoA2", group="Robot")
-public class OCVAutoA2 extends Andytest1 {
+
+@Autonomous(name="Red Row 4", group="Robot")
+public class OCVAutoF4 extends Tigertest1 {
     private int     myExposure  ;
     private int     minExposure ;
     private int     maxExposure ;
@@ -32,8 +33,8 @@ public class OCVAutoA2 extends Andytest1 {
         myExposure = 30;
         myGain = 2;
         setManualExposure(myExposure, myGain);
-        Scalar lower = new Scalar(90, 100, 100);
-        Scalar upper = new Scalar(130, 255, 255);
+        Scalar lower = new Scalar(150, 100, 100);
+        Scalar upper = new Scalar(180, 255, 255);
         double minArea = 3000;
         int cDetection = 0;
 
@@ -51,7 +52,7 @@ public class OCVAutoA2 extends Andytest1 {
                 .addProcessor(colourMassDetectionProcessor)
                 .build();
 
-        while (!isStarted() && cDetection < 30000) {
+        while (!isStarted() && cDetection < 20000) {
             cDetection++;
             if (colourMassDetectionProcessor.getLargestContourX() != -1 && colourMassDetectionProcessor.getLargestContourY() != -1) {
                 recordedPropPosition = colourMassDetectionProcessor.getRecordedPropPosition();
@@ -77,7 +78,7 @@ public class OCVAutoA2 extends Andytest1 {
         }
 
         // tell red or blue team
-        isRedField = -1; // on the blue side (column A)
+        isRedField = 1; // on the red side (column F)
 
         // stop camera
         visionPortal.stopLiveView();
@@ -88,19 +89,19 @@ public class OCVAutoA2 extends Andytest1 {
             case LEFT:
                 telemetry.addLine("Position on LEFT");
                 telemetry.update();
-                dropYellow = false; // start from row 2
+                dropYellow = true; // start from row 4
                 turnClockWise = -1; // Team Prop on left
                 break;
             case MIDDLE:
                 telemetry.addLine("Position on CENTER");
                 telemetry.update();
-                dropYellow = false; // start from row 2
+                dropYellow = true;
                 turnClockWise = 0; // Team Prop on center
                 break;
             case RIGHT:
                 telemetry.addLine("Position on right");
                 telemetry.update();
-                dropYellow = false; // start from row 2
+                dropYellow = true;
                 turnClockWise = 1; // Team Prop on right
                 break;
         }
