@@ -86,8 +86,8 @@ public class Andytest1 extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 4.0; // 3.6 ;     //4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415926);
-    static final double     DRIVE_SPEED             = 0.2; //0.4;
-    static final double     TURN_SPEED              = 0.2; //0.5;
+    static final double     DRIVE_SPEED             = 0.3;
+    static final double     TURN_SPEED              = 0.5; //0.5;
     
     protected int isRedField = 1; // this allows to mirror the mode for the blue field = -1
     protected int turnClockWise = 1;
@@ -119,10 +119,7 @@ public class Andytest1 extends LinearOpMode {
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Starting at",  "%7d :%7d",
-                          leftDrive.getCurrentPosition(),
-                          rightDrive.getCurrentPosition());
-        telemetry.update();
+
 
         // preload the yellow and purple pixels
        preloadPixels();
@@ -256,8 +253,7 @@ public class Andytest1 extends LinearOpMode {
             arm2_servo.setPosition(1);
         }
         
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
+
         sleep(1000);  // pause to display final telemetry message.
     }
     
@@ -403,10 +399,7 @@ public class Andytest1 extends LinearOpMode {
                    (leftDrive.isBusy() && rightDrive.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Running to",  " %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Currently at",  " at %7d :%7d",
-                                            leftDrive.getCurrentPosition(), rightDrive.getCurrentPosition());
-                telemetry.update();
+
             }
 
             // Stop all motion;

@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.drive.opmode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import static org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl.Mode.AperturePriority;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.*;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
@@ -25,17 +28,11 @@ public class OCVAutoF4 extends Andytest1 {
     private boolean isRed;
     private VisionPortal visionPortal;
     private ColourMassDetectionProcessor colourMassDetectionProcessor;
-
-
     @Override
     public void runOpMode() {
-        getCameraSetting();
-        myExposure = 30;
-        myGain = 2;
-        setManualExposure(myExposure, myGain);
         Scalar lower = new Scalar(150, 100, 100);
         Scalar upper = new Scalar(180, 255, 255);
-        double minArea = 3000;
+        double minArea = 1000;
         int cDetection = 0;
 
         ColourMassDetectionProcessor.PropPositions recordedPropPosition = ColourMassDetectionProcessor.PropPositions.RIGHT;
@@ -52,7 +49,7 @@ public class OCVAutoF4 extends Andytest1 {
                 .addProcessor(colourMassDetectionProcessor)
                 .build();
 
-        while (!isStarted() && cDetection < 30000) {
+        while (!isStarted() && cDetection < 300000) {
             cDetection++;
             if (colourMassDetectionProcessor.getLargestContourX() != -1 && colourMassDetectionProcessor.getLargestContourY() != -1) {
                 recordedPropPosition = colourMassDetectionProcessor.getRecordedPropPosition();
@@ -72,8 +69,6 @@ public class OCVAutoF4 extends Andytest1 {
                 recordedPropPosition = ColourMassDetectionProcessor.PropPositions.RIGHT;
             }
 
-            getCameraSetting();
-            telemetry.addData("Exposure value", myExposure);
             telemetry.update();
         }
 
@@ -109,73 +104,4 @@ public class OCVAutoF4 extends Andytest1 {
 
         super.runOpMode();
     }
-    private boolean    setManualExposure(int exposureMS, int gain) {
-
-        if (visionPortal == null) {
-            return false;
-        }
-
-
-        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            telemetry.addData("Camera", "Waiting");
-            telemetry.update();
-            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                sleep(20);
-            }
-            telemetry.addData("Camera", "Ready");
-            telemetry.update();
-        }
-
-
-        if (!isStopRequested())
-        {
-
-            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
-                exposureControl.setMode(ExposureControl.Mode.Manual);
-                sleep(50);
-            }
-            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
-            sleep(20);
-
-
-            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-            gainControl.setGain(gain);
-            sleep(20);
-            return (true);
-        } else {
-            return (false);
-        }
-    }
-
-
-    private void getCameraSetting() {
-
-        if (visionPortal == null) {
-            return;
-        }
-
-
-        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            telemetry.addData("Camera", "Waiting");
-            telemetry.update();
-            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                sleep(20);
-            }
-            telemetry.addData("Camera", "Ready");
-            telemetry.update();
-        }
-
-
-        if (!isStopRequested()) {
-            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-            minExposure = (int) exposureControl.getMinExposure(TimeUnit.MILLISECONDS) + 1;
-            maxExposure = (int) exposureControl.getMaxExposure(TimeUnit.MILLISECONDS);
-
-            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-            minGain = gainControl.getMinGain();
-            maxGain = gainControl.getMaxGain();
-        }
-    }
 }
-

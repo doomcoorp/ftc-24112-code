@@ -92,9 +92,9 @@ public class ConceptAprilTagOptimizeExposure extends LinearOpMode
 
         // Establish Min and Max Gains and Exposure.  Then set a low exposure with high gain
         getCameraSetting();
-        myExposure = Math.min(5, minExposure);
+        myExposure = 40;
         myGain = maxGain;
-        setManualExposure(myExposure, myGain);
+        setManualExposure(40, 120);
 
         // Wait for the match to begin.
         telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
@@ -164,6 +164,7 @@ public class ConceptAprilTagOptimizeExposure extends LinearOpMode
         visionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .addProcessor(aprilTag)
+
                 .build();
     }
 
@@ -194,8 +195,8 @@ public class ConceptAprilTagOptimizeExposure extends LinearOpMode
         {
             // Set exposure.  Make sure we are in Manual Mode for these values to take effect.
             ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
-                exposureControl.setMode(ExposureControl.Mode.Manual);
+            if (exposureControl.getMode() != ExposureControl.Mode.AperturePriority) {
+                exposureControl.setMode(ExposureControl.Mode.AperturePriority);
                 sleep(50);
             }
             exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);

@@ -16,48 +16,15 @@ import java.util.concurrent.TimeUnit;
 public class ColourMassDetectionOpMode extends OpMode {
     private VisionPortal visionPortal;
     private ColourMassDetectionProcessor colourMassDetectionProcessor;
-    private int     myExposure  ;
-    private int    myGain;
-    private boolean    setManualExposure(int exposureMS, int gain) {
+    private final ExposureControl.Mode exposureMode = ExposureControl.Mode.AperturePriority;
+    private final long exposureMs = 1;
 
-        if (visionPortal == null) {
-            return false;
-        }
-
-        ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-        if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
-            exposureControl.setMode(ExposureControl.Mode.Manual);
-        }
-        exposureControl.setExposure((long) exposureMS, TimeUnit.MILLISECONDS);
-
-
-        GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-        gainControl.setGain(gain);
-        return (true);
-    }
-
-    private void getCameraSetting() {
-
-        if (visionPortal == null) {
-            return;
-        }
-
-
-    }
 
     @Override
     public void init() {
-        getCameraSetting();
-        myExposure = 50;
-        myGain = 2;
-        setManualExposure(myExposure, myGain);
 
-
-
-
-
-        Scalar lower = new Scalar(90, 100, 100);
-        Scalar upper = new Scalar(130, 255, 255);
+        Scalar lower = new Scalar(150, 100, 100);
+        Scalar upper = new Scalar(180, 255, 255);
         double minArea = 2000;
 
 
@@ -73,15 +40,11 @@ public class ColourMassDetectionOpMode extends OpMode {
                 .addProcessor(colourMassDetectionProcessor)
                 .build();
 
-
-
-
-
-
     }
 
     @Override
     public void init_loop() {
+
         double MEGABOMBA = colourMassDetectionProcessor.getLargestContourX();
         telemetry.addData("Currently Recorded Position", colourMassDetectionProcessor.getRecordedPropPosition());
         telemetry.addData("Camera State", visionPortal.getCameraState());
