@@ -27,12 +27,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 /*
  * This OpMode illustrates the concept of driving a path based on encoder counts.
@@ -60,9 +60,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Andy test 1", group="Robot")
+@Autonomous(name="Tiger test 1", group="Robot")
 
-public class Andytest1 extends LinearOpMode {
+public class Tigertest1 extends LinearOpMode {
 
     /* Declare OpMode members. */
     protected DcMotor         leftDrive   = null;
@@ -86,8 +86,8 @@ public class Andytest1 extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 4.0; // 3.6 ;     //4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415926);
-    static final double     DRIVE_SPEED             = 0.2; //0.4;
-    static final double     TURN_SPEED              = 0.2; //0.5;
+    static final double     DRIVE_SPEED             = 0.35; //0.4;
+    static final double     TURN_SPEED              = 0.3; //0.5;
     
     protected int isRedField = 1; // this allows to mirror the mode for the blue field = -1
     protected int turnClockWise = 1;
@@ -119,10 +119,7 @@ public class Andytest1 extends LinearOpMode {
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Starting at",  "%7d :%7d",
-                          leftDrive.getCurrentPosition(),
-                          rightDrive.getCurrentPosition());
-        telemetry.update();
+
 
         // preload the yellow and purple pixels
        preloadPixels();
@@ -155,7 +152,7 @@ public class Andytest1 extends LinearOpMode {
         //     turn 45 degree with 8 inches
         //      move forward another 2 inches
 
-        int moveForwards = 20;
+        int moveForwards = 18;
         double turningInch = 8;
         int moveExtra = 2;
         int moveCenterClose = 2;
@@ -200,10 +197,11 @@ public class Andytest1 extends LinearOpMode {
         if (dropYellow && !isCenter)
             moveExtra +=2;
 
-        encoderDrive(DRIVE_SPEED, moveExtra * -1, moveExtra * -1, 2.0);
 
-        if (!isCenter || !dropYellow)
+        if (!isCenter || !dropYellow) {
+            encoderDrive(DRIVE_SPEED, moveExtra * -1, moveExtra * -1, 2.0);
             encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 5.0);
+        }
 
         if (!dropYellow)
             encoderDrive(DRIVE_SPEED, moveForwards * -1, moveForwards * -1, 2.0);
@@ -213,18 +211,18 @@ public class Andytest1 extends LinearOpMode {
         {
             // move horitonal cooridate of the April Tag
             int alignApriTag = -2;
-            int alignParking = 14;
+            int alignParking = 16;
             double rotate90 = 12.7 * isRedField;
 
             if (isCenter) {
-                alignApriTag += 10; // distance from center to go to border
+                alignApriTag += 8; // distance from center to go to border
                 alignParking += 8;
             }
             else {
                 if (turnClockWise * isRedField == -1) {
-                    // add extra length on horizonal coordinate
-                    alignApriTag += 18;
-                    alignParking+=16;
+                    // add extra length on horizontal coordinate
+                    alignApriTag += 14;
+                    alignParking+=15;
                 }
 
                 encoderDrive(DRIVE_SPEED, alignApriTag, alignApriTag, 3.0);
@@ -235,8 +233,12 @@ public class Andytest1 extends LinearOpMode {
 
             // go to one feet away from backdrop
             int goToBackDrop = -36;
-            if (!isCenter)
-                goToBackDrop -= 2 * (turnClockWise * isRedField);
+            if (isCenter) {
+                goToBackDrop -= moveExtra;
+            }
+           // else {
+                //goToBackDrop -= 2 * (turnClockWise * isRedField);
+            //}
 
             encoderDrive(DRIVE_SPEED, goToBackDrop, goToBackDrop, 5.0);
             
@@ -255,9 +257,8 @@ public class Andytest1 extends LinearOpMode {
             placePurplePixel();
             arm2_servo.setPosition(1);
         }
-        
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
+
+
         sleep(1000);  // pause to display final telemetry message.
     }
     
@@ -403,10 +404,7 @@ public class Andytest1 extends LinearOpMode {
                    (leftDrive.isBusy() && rightDrive.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Running to",  " %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Currently at",  " at %7d :%7d",
-                                            leftDrive.getCurrentPosition(), rightDrive.getCurrentPosition());
-                telemetry.update();
+
             }
 
             // Stop all motion;

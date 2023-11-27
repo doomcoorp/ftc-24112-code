@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -12,8 +12,8 @@ import org.opencv.core.Scalar;
 import java.util.concurrent.TimeUnit;
 
 
-@Autonomous(name="OCVAutoF2", group="Robot")
-public class OCVAutoF2 extends Andytest1 {
+@Autonomous(name="Red Row 2", group="Robot")
+public class OCVAutoF2 extends Tigertest1 {
     private int     myExposure  ;
     private int     minExposure ;
     private int     maxExposure ;
