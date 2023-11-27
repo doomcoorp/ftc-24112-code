@@ -189,6 +189,8 @@ public class Tigertest1 extends LinearOpMode {
 
         // all the way back to original place
         if (isCenter) {
+            if (dropYellow)
+                moveCenterClose += 1;
             encoderDrive(DRIVE_SPEED, moveCenterClose * -1, moveCenterClose * -1, 2.0);
             encoderDrive(TURN_SPEED, leftTurn, leftTurn * -1, 5.0);
         }
@@ -211,18 +213,21 @@ public class Tigertest1 extends LinearOpMode {
         {
             // move horitonal cooridate of the April Tag
             int alignApriTag = -2;
-            int alignParking = 16;
+            int alignParking = 12;
             double rotate90 = 12.7 * isRedField;
+
+            if (isRedField == -1)
+                alignParking += 2;
 
             if (isCenter) {
                 alignApriTag += 8; // distance from center to go to border
-                alignParking += 8;
+                alignParking += 10;
             }
             else {
                 if (turnClockWise * isRedField == -1) {
                     // add extra length on horizontal coordinate
-                    alignApriTag += 14;
-                    alignParking+=15;
+                    alignApriTag += 16;
+                    alignParking+=16;
                 }
 
                 encoderDrive(DRIVE_SPEED, alignApriTag, alignApriTag, 3.0);
@@ -236,9 +241,9 @@ public class Tigertest1 extends LinearOpMode {
             if (isCenter) {
                 goToBackDrop -= moveExtra;
             }
-           // else {
-                //goToBackDrop -= 2 * (turnClockWise * isRedField);
-            //}
+            else {
+                goToBackDrop = goToBackDrop - 2 * (turnClockWise * isRedField) + 1;
+            }
 
             encoderDrive(DRIVE_SPEED, goToBackDrop, goToBackDrop, 5.0);
             

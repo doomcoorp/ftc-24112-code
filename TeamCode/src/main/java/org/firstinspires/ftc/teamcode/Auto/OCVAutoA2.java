@@ -51,7 +51,7 @@ public class OCVAutoA2 extends Tigertest1 {
                 .addProcessor(colourMassDetectionProcessor)
                 .build();
 
-        while (!isStarted() && cDetection < 30000) {
+        while (!isStarted() && cDetection < 20000) {
             cDetection++;
             if (colourMassDetectionProcessor.getLargestContourX() != -1 && colourMassDetectionProcessor.getLargestContourY() != -1) {
                 recordedPropPosition = colourMassDetectionProcessor.getRecordedPropPosition();
