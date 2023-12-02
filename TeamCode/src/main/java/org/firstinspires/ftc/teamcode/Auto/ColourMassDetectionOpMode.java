@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -12,7 +12,7 @@ import org.opencv.core.Scalar;
 
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(group="drive")
+@Autonomous(name = "TestOpenCV", group = "Robot")
 public class ColourMassDetectionOpMode extends OpMode {
     private VisionPortal visionPortal;
     private ColourMassDetectionProcessor colourMassDetectionProcessor;

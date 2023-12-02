@@ -27,13 +27,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.opencv.core.Scalar;
+import java.util.concurrent.TimeUnit;
 /*
  * This OpMode illustrates the concept of driving a path based on encoder counts.
  * The code is structured as a LinearOpMode
@@ -60,9 +68,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Andy test 1", group="Robot")
+@Autonomous(name="(Do not use) Autonomous Base", group="Robot")
 
-public class Andytest1 extends LinearOpMode {
+public class AutonomousBase extends LinearOpMode {
 
     /* Declare OpMode members. */
     protected DcMotor         leftDrive   = null;
@@ -88,11 +96,22 @@ public class Andytest1 extends LinearOpMode {
                                                       (WHEEL_DIAMETER_INCHES * 3.1415926);
     static final double     DRIVE_SPEED             = 0.3;
     static final double     TURN_SPEED              = 0.5; //0.5;
-    
+
     protected int isRedField = 1; // this allows to mirror the mode for the blue field = -1
     protected int turnClockWise = 1;
     protected boolean dropYellow = false;
-    
+
+    private int     myExposure  ;
+    private int     minExposure ;
+    private int     maxExposure ;
+    private int     myGain      ;
+    private int     minGain ;
+    private int     maxGain ;
+
+    private boolean isRed;
+    protected VisionPortal visionPortal;
+    protected ColourMassDetectionProcessor colourMassDetectionProcessor;
+
     @Override
     public void runOpMode() {
 
@@ -122,7 +141,7 @@ public class Andytest1 extends LinearOpMode {
 
 
         // preload the yellow and purple pixels
-       preloadPixels();
+        preloadPixels();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -152,7 +171,11 @@ public class Andytest1 extends LinearOpMode {
         //     turn 45 degree with 8 inches
         //      move forward another 2 inches
 
-        int moveForwards = 20;
+        // Start by detecting prop to determine where to go
+        detectPropPosition();
+
+        // Start moving
+        int moveForwards = 18;
         double turningInch = 8;
         int moveExtra = 2;
         int moveCenterClose = 2;
@@ -189,6 +212,8 @@ public class Andytest1 extends LinearOpMode {
 
         // all the way back to original place
         if (isCenter) {
+            if (dropYellow)
+                moveCenterClose += 1;
             encoderDrive(DRIVE_SPEED, moveCenterClose * -1, moveCenterClose * -1, 2.0);
             encoderDrive(TURN_SPEED, leftTurn, leftTurn * -1, 5.0);
         }
@@ -197,10 +222,11 @@ public class Andytest1 extends LinearOpMode {
         if (dropYellow && !isCenter)
             moveExtra +=2;
 
-        encoderDrive(DRIVE_SPEED, moveExtra * -1, moveExtra * -1, 2.0);
 
-        if (!isCenter || !dropYellow)
+        if (!isCenter || !dropYellow) {
+            encoderDrive(DRIVE_SPEED, moveExtra * -1, moveExtra * -1, 2.0);
             encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 5.0);
+        }
 
         if (!dropYellow)
             encoderDrive(DRIVE_SPEED, moveForwards * -1, moveForwards * -1, 2.0);
@@ -210,17 +236,20 @@ public class Andytest1 extends LinearOpMode {
         {
             // move horitonal cooridate of the April Tag
             int alignApriTag = -2;
-            int alignParking = 14;
+            int alignParking = 12;
             double rotate90 = 12.7 * isRedField;
 
+            if (isRedField == -1)
+                alignParking += 2;
+
             if (isCenter) {
-                alignApriTag += 10; // distance from center to go to border
-                alignParking += 8;
+                alignApriTag += 8; // distance from center to go to border
+                alignParking += 10;
             }
             else {
                 if (turnClockWise * isRedField == -1) {
-                    // add extra length on horizonal coordinate
-                    alignApriTag += 18;
+                    // add extra length on horizontal coordinate
+                    alignApriTag += 16;
                     alignParking+=16;
                 }
 
@@ -232,8 +261,12 @@ public class Andytest1 extends LinearOpMode {
 
             // go to one feet away from backdrop
             int goToBackDrop = -36;
-            if (!isCenter)
-                goToBackDrop -= 2 * (turnClockWise * isRedField);
+            if (isCenter) {
+                goToBackDrop -= moveExtra;
+            }
+            else {
+                goToBackDrop = goToBackDrop - 2 * (turnClockWise * isRedField) + 1;
+            }
 
             encoderDrive(DRIVE_SPEED, goToBackDrop, goToBackDrop, 5.0);
             
@@ -248,11 +281,10 @@ public class Andytest1 extends LinearOpMode {
         }
         else
         {
-            // drop the yellow and wait for menual competition time
-            placePurplePixel();
+            // drop the yellow and wait for manual competition time
+            placeDownPixels();
             arm2_servo.setPosition(1);
         }
-        
 
         sleep(1000);  // pause to display final telemetry message.
     }
@@ -280,7 +312,7 @@ public class Andytest1 extends LinearOpMode {
      */    
     public void placePurplePickYellowPixel() {
         
-        placePurplePixel();
+        placeDownPixels();
         
         // go back 3.5 in (pixel width), so that you can pick up the yellow pixel
         encoderDrive(DRIVE_SPEED,  -3.4,  -3.4, 5.0); 
@@ -292,14 +324,17 @@ public class Andytest1 extends LinearOpMode {
         encoderDrive(DRIVE_SPEED,  3.4,  3.4, 5.0); 
     }
 
-    public void placePurplePixel() {
+    /*
+     * Lowers the small arm and opens the hand servo, leaving the small arm down
+     */
+    public void placeDownPixels() {
         // lower arm 2 
         arm2_servo.setPosition(-1);
-        sleep(1500); // needed to close the hand when ready
+        sleep(1200); // needed to close the hand when ready
       
         // open hand and drop both pixels
         hand_servo.setPosition(-1);
-        sleep(800);
+        sleep(500);
         
     }
     /*
@@ -317,20 +352,21 @@ public class Andytest1 extends LinearOpMode {
         }
         
         // set target positiom of both arms to the final dropping position
-        left_arm.setTargetPosition(530);
-        right_arm.setTargetPosition(530);
+        left_arm.setTargetPosition(450); // 530 is theoretical final position. adjust based on motor power.
+        right_arm.setTargetPosition(450); // the greater the power, the smaller the final position number.
         // set mode of arm motors to RUN_TO_POSITION
         left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         // give power to the motors, not too fast
-        left_arm.setPower(0.3);
-        right_arm.setPower(0.3);
+        left_arm.setPower(0.6);
+        right_arm.setPower(0.6);
         // empty loop that wits until the arm is in the target position
         while (opModeIsActive() && left_arm.isBusy()) {
         }
         // Set motors power to 0
         left_arm.setPower(0);
         right_arm.setPower(0);       
+
         sleep(600); // probably not needed. at the end of the loop the arms should be in position
          
         // open the hand servo to drop pixel
@@ -344,16 +380,15 @@ public class Andytest1 extends LinearOpMode {
         right_arm.setTargetPosition(0);
         left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        left_arm.setPower(0.3);
-        right_arm.setPower(0.3);
+        left_arm.setPower(0.6);
+        right_arm.setPower(0.6);
+        sleep(300); // added in place of the while loop, so it starts moving before the arm is completely down
+        /* test more, then this might be removed
         while (opModeIsActive() && left_arm.isBusy()) {
         }
         left_arm.setPower(0);
         right_arm.setPower(0);
-
-        // reset motors to not run with encoders (probably not needed)
-        //left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+         */
     }
     /*
      *  Method to perform a relative move, based on encoder counts.
@@ -412,5 +447,143 @@ public class Andytest1 extends LinearOpMode {
 
             sleep(250);   // optional pause after each move.
         }
+    }
+
+    private boolean    setManualExposure(int exposureMS, int gain) {
+
+        if (visionPortal == null) {
+            return false;
+        }
+
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            telemetry.addData("Camera", "Waiting");
+            telemetry.update();
+            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                sleep(20);
+            }
+            telemetry.addData("Camera", "Ready");
+            telemetry.update();
+        }
+
+        if (!isStopRequested())
+        {
+
+            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+                exposureControl.setMode(ExposureControl.Mode.Manual);
+                sleep(50);
+            }
+            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
+            sleep(20);
+
+            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+            gainControl.setGain(gain);
+            sleep(20);
+            return (true);
+        } else {
+            return (false);
+        }
+    }
+
+    private void getCameraSetting() {
+
+        if (visionPortal == null) {
+            return;
+        }
+
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            telemetry.addData("Camera", "Waiting");
+            telemetry.update();
+            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                sleep(20);
+            }
+            telemetry.addData("Camera", "Ready");
+            telemetry.update();
+        }
+
+        if (!isStopRequested()) {
+            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+            minExposure = (int) exposureControl.getMinExposure(TimeUnit.MILLISECONDS) + 1;
+            maxExposure = (int) exposureControl.getMaxExposure(TimeUnit.MILLISECONDS);
+
+            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+            minGain = gainControl.getMinGain();
+            maxGain = gainControl.getMaxGain();
+        }
+    }
+
+    private void detectPropPosition() {
+        getCameraSetting();
+        myExposure = 30;
+        myGain = 2;
+        setManualExposure(myExposure, myGain);
+        Scalar lower = new Scalar(90, 100, 100);
+        Scalar upper = new Scalar(130, 255, 255);
+        double minArea = 3000;
+        int cDetection = 0;
+
+        ColourMassDetectionProcessor.PropPositions recordedPropPosition = ColourMassDetectionProcessor.PropPositions.RIGHT;
+
+        colourMassDetectionProcessor = new ColourMassDetectionProcessor(
+                lower,
+                upper,
+                () -> minArea,
+                () -> 213,
+                () -> 426
+        );
+
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .addProcessor(colourMassDetectionProcessor)
+                .build();
+
+        while (cDetection < 20000) {
+            cDetection++;
+            if (colourMassDetectionProcessor.getLargestContourX() != -1 && colourMassDetectionProcessor.getLargestContourY() != -1) {
+                recordedPropPosition = colourMassDetectionProcessor.getRecordedPropPosition();
+                if (recordedPropPosition == ColourMassDetectionProcessor.PropPositions.RIGHT) {
+                    recordedPropPosition = ColourMassDetectionProcessor.PropPositions.MIDDLE;
+                }
+                telemetry.addData("position detected", cDetection);
+                telemetry.addData("Currently Recorded Position", recordedPropPosition);
+                telemetry.addData("Camera State", visionPortal.getCameraState());
+                telemetry.addData("Currently Detected Mass Center", "x: " + colourMassDetectionProcessor.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
+                telemetry.addData("Currently Detected Mass Area", colourMassDetectionProcessor.getLargestContourArea());
+            } else {
+                telemetry.addLine("Position Currently Unfound");
+                telemetry.addData("Camera State", visionPortal.getCameraState());
+                telemetry.addData("Currently Detected Mass Center", "x: " + colourMassDetectionProcessor.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
+                telemetry.addData("Currently Detected Mass Area", colourMassDetectionProcessor.getLargestContourArea());
+                recordedPropPosition = ColourMassDetectionProcessor.PropPositions.RIGHT;
+            }
+
+            getCameraSetting();
+            telemetry.addData("Exposure value", myExposure);
+            telemetry.update();
+        }
+
+        // stop camera
+        visionPortal.stopLiveView();
+        visionPortal.stopStreaming();
+
+        // run case based on prop position
+        switch (recordedPropPosition) {
+            case LEFT:
+                telemetry.addLine("Position on LEFT");
+                telemetry.update();
+                turnClockWise = -1; // Team Prop on left
+                break;
+            case MIDDLE:
+                telemetry.addLine("Position on CENTER");
+                telemetry.update();
+                turnClockWise = 0; // Team Prop on center
+                break;
+            case RIGHT:
+                telemetry.addLine("Position on right");
+                telemetry.update();
+                turnClockWise = 1; // Team Prop on right
+                break;
+        }
+        telemetry.update();
     }
 }
