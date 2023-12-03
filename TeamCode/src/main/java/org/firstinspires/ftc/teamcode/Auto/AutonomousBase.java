@@ -68,7 +68,7 @@ import java.util.concurrent.TimeUnit;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="(Do not use) Autonomous Base", group="Robot")
+@Autonomous(name="(Do not use) Autonomous Base", group="WAKAWKAWKAKAKAK")
 
 public class AutonomousBase extends LinearOpMode {
 
@@ -118,7 +118,7 @@ public class AutonomousBase extends LinearOpMode {
         // Initialize the drive system variables.
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        
+
         right_arm = hardwareMap.get(DcMotor.class, "right_arm");
         left_arm = hardwareMap.get(DcMotor.class, "left_arm");
         hand_servo = hardwareMap.get(Servo.class, "hand_servo");
@@ -148,21 +148,21 @@ public class AutonomousBase extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        
-        // For Red: 
-        //     1 is F2 to right (clockwise). 
+
+        // For Red:
+        //     1 is F2 to right (clockwise).
         //     -1 is F2 to left (counterClockWise)
         //     0 is F2 at middle
-        // For Blue: 
-        //     -1 is A2 to left (counterClockwise). 
+        // For Blue:
+        //     -1 is A2 to left (counterClockwise).
         //     1 is A2 to right (clockwise)
         //     0 is A2 at middle
         // for example: int turnClockWise = 0;
-        
+
         // true if we are at A4 or F4
         // for example: boolean dropYellow = true;
-        
-        // For left or right, 
+
+        // For left or right,
         //     move forward 20 inches
         //     turn 45 degree with 8 inches
         //      move forward another 2 inches
@@ -175,7 +175,7 @@ public class AutonomousBase extends LinearOpMode {
         detectPropPosition();
 
         // Start moving
-        int moveForwards = 18;
+        int moveForwards = 18; // turn 90, forwards 8 inch, go back 8 inch,
         double turningInch = 8;
         int moveExtra = 2;
         int moveCenterClose = 2;
@@ -183,28 +183,34 @@ public class AutonomousBase extends LinearOpMode {
 
         if (turnClockWise == 0)
         {
-            moveForwards = 24; // Move two feet to reach spike mark
-            turningInch = -12.8; // turn 90 degree
-            moveExtra = 6; // align the edge of the spike mark
+            moveForwards = 36; // 24; // Move two feet to reach spike mark
+            turningInch = -12.6; // 90 degree turn
+            moveExtra = -8; //6; // align the edge of the spike mark
             turnClockWise = 1 * isRedField; // turn clockWise
         }
 
         double leftTurn = turningInch * turnClockWise;
 
+
+
         // go to spike mark
         encoderDrive(DRIVE_SPEED,  moveForwards,  moveForwards, 5.0);
 
         // turning
-        encoderDrive(TURN_SPEED, leftTurn, leftTurn * -1, 5.0);
+        if (!isCenter)
+                encoderDrive(TURN_SPEED, leftTurn, leftTurn * -1, 5.0);
 
         // move forward a bit to get closer to edge of spike mark
         // for center position, align with edge of spike mark
         encoderDrive(DRIVE_SPEED,  moveExtra,  moveExtra, 2.0);
 
         if (isCenter) {
-            // turning 90 degree back to face spike mark
-            encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 5.0);
-            encoderDrive(DRIVE_SPEED, moveCenterClose, moveCenterClose, 2.0);
+            //encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 5.0);
+            //encoderDrive(DRIVE_SPEED, moveCenterClose, moveCenterClose, 2.0);
+           // encoderDrive(DRIVE_SPEED, moveCenterClose * -1, moveCenterClose * -1, 2.0);
+                        // turning 90 degree back to face spike mark
+            //encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 5.0);
+            //encoderDrive(DRIVE_SPEED, moveCenterClose, moveCenterClose, 2.0);
         }
 
         // drop the purple and pick up yellow
@@ -212,9 +218,9 @@ public class AutonomousBase extends LinearOpMode {
 
         // all the way back to original place
         if (isCenter) {
-            if (dropYellow)
-                moveCenterClose += 1;
-            encoderDrive(DRIVE_SPEED, moveCenterClose * -1, moveCenterClose * -1, 2.0);
+           // if (dropYellow)
+            //    moveCenterClose += 1;
+            //encoderDrive(DRIVE_SPEED, moveCenterClose * -1, moveCenterClose * -1, 2.0);
             encoderDrive(TURN_SPEED, leftTurn, leftTurn * -1, 5.0);
         }
 
@@ -230,13 +236,13 @@ public class AutonomousBase extends LinearOpMode {
 
         if (!dropYellow)
             encoderDrive(DRIVE_SPEED, moveForwards * -1, moveForwards * -1, 2.0);
-        
+
         // in case we are in A4 or F4, let us go to backdrop
         if (dropYellow)
         {
             // move horitonal cooridate of the April Tag
             int alignApriTag = -2;
-            int alignParking = 12;
+            int alignParking = 16;
             double rotate90 = 12.7 * isRedField;
 
             if (isRedField == -1)
@@ -244,7 +250,7 @@ public class AutonomousBase extends LinearOpMode {
 
             if (isCenter) {
                 alignApriTag += 8; // distance from center to go to border
-                alignParking += 10;
+                alignParking += 14;
             }
             else {
                 if (turnClockWise * isRedField == -1) {
@@ -262,17 +268,17 @@ public class AutonomousBase extends LinearOpMode {
             // go to one feet away from backdrop
             int goToBackDrop = -36;
             if (isCenter) {
-                goToBackDrop -= moveExtra;
+                goToBackDrop -= moveExtra + 6;
             }
             else {
                 goToBackDrop = goToBackDrop - 2 * (turnClockWise * isRedField) + 1;
             }
 
             encoderDrive(DRIVE_SPEED, goToBackDrop, goToBackDrop, 5.0);
-            
+
             // drop the yellow pixel
             placePixelOnBackdrop(1);
-            
+
             // go to park
             encoderDrive(TURN_SPEED, rotate90, rotate90 * -1, 2.0); // Turn 90 degrees towards driver station
             encoderDrive(DRIVE_SPEED,  alignParking * -1,  alignParking * -1, 3.0); // hrizonal back to the border line
@@ -288,9 +294,9 @@ public class AutonomousBase extends LinearOpMode {
 
         sleep(1000);  // pause to display final telemetry message.
     }
-    
+
     /*
-     *  Method to preload the yellow and purple pixels prior to the starting of the 
+     *  Method to preload the yellow and purple pixels prior to the starting of the
      *  autonomous mode. This needs to be called in the initialization phase.
      *  TODO: need to make sure we can actually do the initialization this way
      *  Problem is that with no opmode running, the hand servo goes to position 0 and drops the pixels.
@@ -308,38 +314,38 @@ public class AutonomousBase extends LinearOpMode {
 
     /*
      *  Method to place both preloaded pixels down and pick up the yellow one
-     *  before proceeding. 
-     */    
+     *  before proceeding.
+     */
     public void placePurplePickYellowPixel() {
-        
+
         placeDownPixels();
-        
+
         // go back 3.5 in (pixel width), so that you can pick up the yellow pixel
-        encoderDrive(DRIVE_SPEED,  -3.4,  -3.4, 5.0); 
-        
+        encoderDrive(DRIVE_SPEED,  -3.4,  -3.4, 5.0);
+
         // close hand to pick up yellow pixel and raise arm 2
         hand_servo.setPosition(1);
         sleep(800);
         arm2_servo.setPosition(1);
-        encoderDrive(DRIVE_SPEED,  3.4,  3.4, 5.0); 
+        //encoderDrive(DRIVE_SPEED,  3.4,  3.4, 5.0);
     }
 
     /*
      * Lowers the small arm and opens the hand servo, leaving the small arm down
      */
     public void placeDownPixels() {
-        // lower arm 2 
+        // lower arm 2
         arm2_servo.setPosition(-1);
         sleep(1200); // needed to close the hand when ready
-      
+
         // open hand and drop both pixels
         hand_servo.setPosition(-1);
         sleep(500);
-        
+
     }
     /*
      *  Method to place a pixel on the backdrop
-     *  int isMainArmDirectionForward is 0 or 1. this could be removed. we know the motors 
+     *  int isMainArmDirectionForward is 0 or 1. this could be removed. we know the motors
      *  start in the arm forward position
      */
     public void placePixelOnBackdrop(int isMainArmDirectionForward) {
@@ -350,7 +356,7 @@ public class AutonomousBase extends LinearOpMode {
             right_arm.setDirection(DcMotor.Direction.REVERSE);
             isMainArmDirectionForward = 0;
         }
-        
+
         // set target positiom of both arms to the final dropping position
         left_arm.setTargetPosition(450); // 530 is theoretical final position. adjust based on motor power.
         right_arm.setTargetPosition(450); // the greater the power, the smaller the final position number.
@@ -365,13 +371,13 @@ public class AutonomousBase extends LinearOpMode {
         }
         // Set motors power to 0
         left_arm.setPower(0);
-        right_arm.setPower(0);       
+        right_arm.setPower(0);
 
         sleep(600); // probably not needed. at the end of the loop the arms should be in position
-         
+
         // open the hand servo to drop pixel
         hand_servo.setPosition(-1);
-        
+
         // Rotate arm back to original starting position
         left_arm.setDirection(DcMotor.Direction.REVERSE);
         right_arm.setDirection(DcMotor.Direction.FORWARD);
@@ -519,7 +525,7 @@ public class AutonomousBase extends LinearOpMode {
         setManualExposure(myExposure, myGain);
         Scalar lower = new Scalar(90, 100, 100);
         Scalar upper = new Scalar(130, 255, 255);
-        double minArea = 3000;
+        double minArea = 0;
         int cDetection = 0;
 
         ColourMassDetectionProcessor.PropPositions recordedPropPosition = ColourMassDetectionProcessor.PropPositions.RIGHT;
@@ -537,10 +543,10 @@ public class AutonomousBase extends LinearOpMode {
                 .addProcessor(colourMassDetectionProcessor)
                 .build();
 
-        while (cDetection < 20000) {
+        while (cDetection < 5000) {
             cDetection++;
+            recordedPropPosition = colourMassDetectionProcessor.getRecordedPropPosition();
             if (colourMassDetectionProcessor.getLargestContourX() != -1 && colourMassDetectionProcessor.getLargestContourY() != -1) {
-                recordedPropPosition = colourMassDetectionProcessor.getRecordedPropPosition();
                 if (recordedPropPosition == ColourMassDetectionProcessor.PropPositions.RIGHT) {
                     recordedPropPosition = ColourMassDetectionProcessor.PropPositions.MIDDLE;
                 }
@@ -561,11 +567,16 @@ public class AutonomousBase extends LinearOpMode {
             telemetry.addData("Exposure value", myExposure);
             telemetry.update();
         }
-
+        if (recordedPropPosition == ColourMassDetectionProcessor.PropPositions.RIGHT) {
+            recordedPropPosition = ColourMassDetectionProcessor.PropPositions.MIDDLE;
+        }
+        if (recordedPropPosition == ColourMassDetectionProcessor.PropPositions.UNFOUND) {
+            recordedPropPosition = ColourMassDetectionProcessor.PropPositions.RIGHT;
+        }
         // stop camera
         visionPortal.stopLiveView();
         visionPortal.stopStreaming();
-
+        recordedPropPosition = ColourMassDetectionProcessor.PropPositions.LEFT;
         // run case based on prop position
         switch (recordedPropPosition) {
             case LEFT:
