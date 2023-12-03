@@ -73,6 +73,8 @@ import java.util.concurrent.TimeUnit;
 public class AutonomousBase extends LinearOpMode {
 
     /* Declare OpMode members. */
+    protected Scalar upper;
+    protected Scalar lower;
     protected DcMotor         leftDrive   = null;
     protected DcMotor         rightDrive  = null;
 
@@ -233,6 +235,8 @@ public class AutonomousBase extends LinearOpMode {
            // if (dropYellow)
             //    moveCenterClose += 1;
             //encoderDrive(DRIVE_SPEED, moveCenterClose * -1, moveCenterClose * -1, 2.0);
+            if (isRedField ==1)
+                leftTurn += 0.2;
             encoderDrive(TURN_SPEED, leftTurn, leftTurn * -1, 5.0);
         }
 
@@ -288,6 +292,7 @@ public class AutonomousBase extends LinearOpMode {
 
                     // Turn 90 degree
                     encoderDrive(TURN_SPEED, rotate90 * -1, rotate90, 2.0);
+
                     encoderDrive(DRIVE_SPEED, alignApriTag, alignApriTag, 3.0);
                     encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 5.0);
                 }
@@ -298,10 +303,14 @@ public class AutonomousBase extends LinearOpMode {
             int goToBackDrop = -36;
             if (isCenter) {
                 goToBackDrop -= moveExtra + 6;
+                if (isRedField == 1)
+                    goToBackDrop -= 3;
             }
             else if (turnClockWise * isRedField == 1)
             {
                 goToBackDrop += 10;
+                if(isRedField ==1)
+                    goToBackDrop -= 2;
             }
             else {
                 goToBackDrop = goToBackDrop - 2 * (turnClockWise * isRedField) + 1;
@@ -556,9 +565,7 @@ public class AutonomousBase extends LinearOpMode {
         myExposure = 30;
         myGain = 2;
         setManualExposure(myExposure, myGain);
-        Scalar lower = new Scalar(90, 100, 100);
-        Scalar upper = new Scalar(130, 255, 255);
-        double minArea = 0;
+        double minArea = 4000;
         int cDetection = 0;
 
         ColourMassDetectionProcessor.PropPositions recordedPropPosition = ColourMassDetectionProcessor.PropPositions.RIGHT;
@@ -576,10 +583,10 @@ public class AutonomousBase extends LinearOpMode {
                 .addProcessor(colourMassDetectionProcessor)
                 .build();
 
-        while (cDetection < 5000) {
+        while (cDetection < 20000) {
             cDetection++;
-            recordedPropPosition = colourMassDetectionProcessor.getRecordedPropPosition();
             if (colourMassDetectionProcessor.getLargestContourX() != -1 && colourMassDetectionProcessor.getLargestContourY() != -1) {
+                recordedPropPosition = colourMassDetectionProcessor.getRecordedPropPosition();
                 if (recordedPropPosition == ColourMassDetectionProcessor.PropPositions.RIGHT) {
                     recordedPropPosition = ColourMassDetectionProcessor.PropPositions.MIDDLE;
                 }
@@ -600,17 +607,12 @@ public class AutonomousBase extends LinearOpMode {
             telemetry.addData("Exposure value", myExposure);
             telemetry.update();
         }
-        if (recordedPropPosition == ColourMassDetectionProcessor.PropPositions.RIGHT) {
-            recordedPropPosition = ColourMassDetectionProcessor.PropPositions.MIDDLE;
-        }
         if (recordedPropPosition == ColourMassDetectionProcessor.PropPositions.UNFOUND) {
             recordedPropPosition = ColourMassDetectionProcessor.PropPositions.RIGHT;
         }
         // stop camera
         visionPortal.stopLiveView();
         visionPortal.stopStreaming();
-
-        recordedPropPosition = ColourMassDetectionProcessor.PropPositions.RIGHT;
 
         // run case based on prop position
         switch (recordedPropPosition) {
