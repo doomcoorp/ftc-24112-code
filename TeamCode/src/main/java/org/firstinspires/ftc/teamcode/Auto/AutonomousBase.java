@@ -188,6 +188,12 @@ public class AutonomousBase extends LinearOpMode {
             moveExtra = -8; //6; // align the edge of the spike mark
             turnClockWise = 1 * isRedField; // turn clockWise
         }
+        else if ((turnClockWise * isRedField == 1 && dropYellow)
+            || (turnClockWise * isRedField == -1 && !dropYellow))// 28 inch, 90 degree, forward 8 inch, back 8 inch,
+        {
+            moveForwards += 13;
+            moveExtra +=12;
+        }
 
         double leftTurn = turningInch * turnClockWise;
 
@@ -202,7 +208,7 @@ public class AutonomousBase extends LinearOpMode {
 
         // move forward a bit to get closer to edge of spike mark
         // for center position, align with edge of spike mark
-        encoderDrive(DRIVE_SPEED,  moveExtra,  moveExtra, 2.0);
+        encoderDrive(DRIVE_SPEED,  moveExtra,  moveExtra, 5.0);
 
         if (isCenter) {
             //encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 5.0);
@@ -212,12 +218,18 @@ public class AutonomousBase extends LinearOpMode {
             //encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 5.0);
             //encoderDrive(DRIVE_SPEED, moveCenterClose, moveCenterClose, 2.0);
         }
+        else if((turnClockWise * isRedField == 1 && dropYellow) ||
+        (turnClockWise * isRedField == -1 && !dropYellow))
+        {
+            moveExtra -=2;
+            encoderDrive(DRIVE_SPEED, moveExtra * -1, moveExtra * -1, 5.0);
+        }
 
         // drop the purple and pick up yellow
         placePurplePickYellowPixel();
 
         // all the way back to original place
-        if (isCenter) {
+        if (isCenter && dropYellow) {
            // if (dropYellow)
             //    moveCenterClose += 1;
             //encoderDrive(DRIVE_SPEED, moveCenterClose * -1, moveCenterClose * -1, 2.0);
@@ -225,16 +237,22 @@ public class AutonomousBase extends LinearOpMode {
         }
 
         // back all the way to starting position
-        if (dropYellow && !isCenter)
+        if (dropYellow && !isCenter && turnClockWise * isRedField == -1)
             moveExtra +=2;
 
 
-        if (!isCenter || !dropYellow) {
-            encoderDrive(DRIVE_SPEED, moveExtra * -1, moveExtra * -1, 2.0);
+        if (!isCenter) {
+            if(turnClockWise * isRedField == -1) {
+                if (dropYellow) {
+                    encoderDrive(DRIVE_SPEED, moveExtra * -1, moveExtra * -1, 2.0);
+                    encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 5.0);
+                }
+            }
+            else if (!dropYellow)
             encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 5.0);
         }
 
-        if (!dropYellow)
+        if (!dropYellow && !isCenter && turnClockWise * isRedField == 1)
             encoderDrive(DRIVE_SPEED, moveForwards * -1, moveForwards * -1, 2.0);
 
         // in case we are in A4 or F4, let us go to backdrop
@@ -257,18 +275,33 @@ public class AutonomousBase extends LinearOpMode {
                     // add extra length on horizontal coordinate
                     alignApriTag += 16;
                     alignParking+=16;
+
+                    encoderDrive(DRIVE_SPEED, alignApriTag, alignApriTag, 3.0);
+
+                    // Turn 90 degree
+                    encoderDrive(TURN_SPEED, rotate90 * -1, rotate90, 2.0);
                 }
+                else
+                {
+                    alignApriTag -= 13;
+                    alignParking+=6;
 
-                encoderDrive(DRIVE_SPEED, alignApriTag, alignApriTag, 3.0);
-
-                // Turn 90 degree
-                encoderDrive(TURN_SPEED, rotate90 * -1, rotate90, 2.0);
+                    // Turn 90 degree
+                    encoderDrive(TURN_SPEED, rotate90 * -1, rotate90, 2.0);
+                    encoderDrive(DRIVE_SPEED, alignApriTag, alignApriTag, 3.0);
+                    encoderDrive(TURN_SPEED, leftTurn * -1, leftTurn, 5.0);
+                }
             }
+
 
             // go to one feet away from backdrop
             int goToBackDrop = -36;
             if (isCenter) {
                 goToBackDrop -= moveExtra + 6;
+            }
+            else if (turnClockWise * isRedField == 1)
+            {
+                goToBackDrop += 10;
             }
             else {
                 goToBackDrop = goToBackDrop - 2 * (turnClockWise * isRedField) + 1;
@@ -576,7 +609,9 @@ public class AutonomousBase extends LinearOpMode {
         // stop camera
         visionPortal.stopLiveView();
         visionPortal.stopStreaming();
-        recordedPropPosition = ColourMassDetectionProcessor.PropPositions.LEFT;
+
+        recordedPropPosition = ColourMassDetectionProcessor.PropPositions.RIGHT;
+
         // run case based on prop position
         switch (recordedPropPosition) {
             case LEFT:
