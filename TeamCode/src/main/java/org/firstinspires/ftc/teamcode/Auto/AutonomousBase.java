@@ -558,7 +558,7 @@ public class AutonomousBase extends LinearOpMode {
         setManualExposure(myExposure, myGain);
         Scalar lower = new Scalar(90, 100, 100);
         Scalar upper = new Scalar(130, 255, 255);
-        double minArea = 0;
+        double minArea = 8000;
         int cDetection = 0;
 
         ColourMassDetectionProcessor.PropPositions recordedPropPosition = ColourMassDetectionProcessor.PropPositions.RIGHT;

@@ -5,25 +5,26 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+
 import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.opencv.core.Scalar;
 
-import java.util.concurrent.TimeUnit;
-
-@Autonomous(name = "TestOpenCV", group = "Robot")
-public class ColourMassDetectionOpMode extends OpMode {
+@Autonomous(name = "RedOpenCv", group = "Robot")
+public class RedOpenCV extends OpMode {
     private VisionPortal visionPortal;
     private ColourMassDetectionProcessor colourMassDetectionProcessor;
     private final ExposureControl.Mode exposureMode = ExposureControl.Mode.AperturePriority;
-    private final long exposureMs = 1;
+    ExposureControl myExposureControl;  // declare exposure control object
+    long minExp;
+    long maxExp;
+    long curExp;
 
 
     @Override
     public void init() {
 
-        Scalar lower = new Scalar(150, 100, 100);
+        Scalar lower = new Scalar(90, 100, 100);
         Scalar upper = new Scalar(180, 255, 255);
         double minArea = 2000;
 
