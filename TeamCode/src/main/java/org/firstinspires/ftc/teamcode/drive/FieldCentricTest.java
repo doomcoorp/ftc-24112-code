@@ -6,19 +6,33 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@TeleOp(name="Field centric test - work weird cause imu")
+@TeleOp(name="Field centric")
 public class FieldCentricTest extends LinearOpMode {
+    protected DcMotor left_arm;
+    protected DcMotor right_arm;
+    protected Servo arm2_servo;
+    protected Servo hand_servo;
+    protected ElapsedTime runtime = new ElapsedTime();
+
     @Override
     public void runOpMode() throws InterruptedException {
-        // Declare our motors
-        // Make sure your ID's match your configuration
+        int isMainArmDirectionForward;
+        // Declare our motors and servos
         DcMotor leftFront = hardwareMap.dcMotor.get("leftFront");
         DcMotor leftRear = hardwareMap.dcMotor.get("leftRear");
         DcMotor rightFront = hardwareMap.dcMotor.get("rightFront");
         DcMotor rightRear = hardwareMap.dcMotor.get("rightRear");
 
+        DcMotor right_arm = hardwareMap.dcMotor.get("right_arm");
+        DcMotor left_arm = hardwareMap.dcMotor.get("left_arm");
+
+        arm2_servo = hardwareMap.get(Servo.class, "arm2_servo");
+        hand_servo = hardwareMap.get(Servo.class, "hand_servo");
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
         // reverse the left side instead.
@@ -26,6 +40,19 @@ public class FieldCentricTest extends LinearOpMode {
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //Set servo position
+        left_arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right_arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        arm2_servo.setPosition(-0.9);
+        hand_servo.setPosition(1);
+        //reverse left arm, set left and right to brake
+        left_arm.setDirection(DcMotor.Direction.REVERSE);
+        left_arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        right_arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // Set arm position
+        isMainArmDirectionForward = 1;
 
         // Retrieve the IMU from the hardware map
         IMU imu = hardwareMap.get(IMU.class, "imu");
@@ -54,25 +81,112 @@ public class FieldCentricTest extends LinearOpMode {
 
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
-            // Rotate the movement direction counter to the bot's rotation
+            // rotate the movement direction counter to counter rotation
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+            //set direciton
+            if (gamepad1.y && left_arm.getDirection() == DcMotorSimple.Direction.FORWARD) {
+                left_arm.setDirection(DcMotor.Direction.REVERSE);
+                right_arm.setDirection(DcMotor.Direction.FORWARD);
+                isMainArmDirectionForward = 1;
+            } else if (gamepad1.y && left_arm.getDirection() == DcMotor.Direction.REVERSE) {
+                left_arm.setDirection(DcMotor.Direction.FORWARD);
+                right_arm.setDirection(DcMotor.Direction.REVERSE);
+                isMainArmDirectionForward = 0;
+            }
+            // pick up pixel w A
+            if (gamepad1.a) {
+                // open claw
+                hand_servo.setPosition(-1);
+                // arm 2 to floor
+                arm2_servo.setPosition(0.75);
+                // wait to reach to floor
+                sleep(700);
+                // close claw
+                hand_servo.setPosition(1);
+                // wait for claw to close
+                sleep(300);
+                arm2_servo.setPosition(-0.9);
+            }
+            // close / open hand w x
+            if (gamepad1.x && hand_servo.getPosition() == 1) {
+                hand_servo.setPosition(-1);
+            } else if (gamepad1.x && hand_servo.getPosition() == -1) {
+                hand_servo.setPosition(1);
+            }
 
-            rotX = rotX * 1.1;  // Counteract imperfect strafing
+            if (gamepad1.y) {
+                isMainArmDirectionForward = (isMainArmDirectionForward == 1) ? 0 : 1;
+            }
 
-            // Denominator is the largest motor power (absolute value) or 1
-            // This ensures all the powers maintain the same ratio,
-            // but only if at least one is out of the range [-1, 1]
-            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-            double frontLeftPower = (rotY + rotX + rx) / denominator;
-            double backLeftPower = (rotY - rotX + rx) / denominator;
-            double frontRightPower = (rotY - rotX - rx) / denominator;
-            double backRightPower = (rotY + rotX - rx) / denominator;
+            if (gamepad1.b) {
+                if (isMainArmDirectionForward == 1) {
+                    left_arm.setDirection(DcMotor.Direction.REVERSE);
+                    right_arm.setDirection(DcMotor.Direction.FORWARD);
+                    left_arm.setTargetPosition(-400);
+                    right_arm.setTargetPosition(-400);
+                    left_arm.setPower(0.5);
+                    right_arm.setPower(0.5);
+                    left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    sleep(1000);
+                    left_arm.setPower(0);
+                    right_arm.setPower(0);
+                    left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-            leftFront.setPower(frontLeftPower);
-            leftRear.setPower(backLeftPower);
-            rightFront.setPower(frontRightPower);
-            rightRear.setPower(backRightPower);
+                }
+                else {
+                    left_arm.setDirection(DcMotor.Direction.FORWARD);
+                    right_arm.setDirection(DcMotor.Direction.REVERSE);
+                    left_arm.setTargetPosition(-10);
+                    right_arm.setTargetPosition(-10);
+                    left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    left_arm.setPower(0.8);
+                    right_arm.setPower(0.8);
+                    sleep(600);
+                    left_arm.setPower(0);
+                    right_arm.setPower(0);
+                    left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                }
+            }
+                telemetry.addData("Left front Power", leftFront.getPower());
+                telemetry.addData("Left back Power", leftRear.getPower());
+                telemetry.addData("Right back power", rightRear.getPower());
+                telemetry.addData("right front power", rightFront.getPower());
+                telemetry.addData("Left arm power", left_arm.getPower());
+                telemetry.addData("Right arm power", right_arm.getPower());
+                telemetry.addData("LeftArm", left_arm.getCurrentPosition());
+                telemetry.addData("Right Arm", right_arm.getCurrentPosition());
+                telemetry.addData("arm2 servo direction", arm2_servo.getDirection());
+                telemetry.addData("arm2 servo position ", arm2_servo.getPosition());
+                telemetry.addData("hand servo direction", hand_servo.getDirection());
+                telemetry.addData("hand servo position", hand_servo.getPosition());
+                telemetry.addData("isMainArmForward", isMainArmDirectionForward);
+                telemetry.addData("larm current pos", left_arm.getCurrentPosition());
+                telemetry.addData("rarm current pos", right_arm.getCurrentPosition());
+
+            telemetry.addData("larm target pos", left_arm.getTargetPosition());
+            telemetry.addData("rarm target pos", right_arm.getTargetPosition());
+
+            telemetry.update();
+
+
+                rotX = rotX * 1.1;  // this thing is here to counteract imperfect strafing
+
+                // basically math to make sure all them have the same power
+                double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+                double frontLeftPower = (rotY + rotX + rx) / denominator;
+                double backLeftPower = (rotY - rotX + rx) / denominator;
+                double frontRightPower = (rotY - rotX - rx) / denominator;
+                double backRightPower = (rotY + rotX - rx) / denominator;
+
+                leftFront.setPower(frontLeftPower);
+                leftRear.setPower(backLeftPower);
+                rightFront.setPower(frontRightPower);
+                rightRear.setPower(backRightPower);
+            }
         }
     }
-}
