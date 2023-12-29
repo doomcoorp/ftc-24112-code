@@ -14,29 +14,35 @@ import org.opencv.core.Scalar;
 public class RedOpenCV extends OpMode {
     private VisionPortal visionPortal;
     private ColourMassDetectionProcessor colourMassDetectionProcessor;
+    Scalar lowerycrcb = new Scalar(0.0, 90, 200);
+    Scalar upperycrcb = new Scalar(255, 130, 260);
+    double minArea = 2000;  
+    public volatile boolean error = false;
+    public volatile Exception debug;
+    private int loopCounter = 0;
+    private int pLoopCounter = 0;
+
+
+
+
     @Override
     public void init() {
-        Scalar lower = new Scalar(0, 100, 20);
-        Scalar upper = new Scalar(170, 255, 255);
-        double minArea = 2000;
-
-
-        colourMassDetectionProcessor = new ColourMassDetectionProcessor(lower, upper, () -> minArea, () -> 213, () -> 426);
+        colourMassDetectionProcessor = new ColourMassDetectionProcessor(lowerycrcb, upperycrcb, () -> minArea, () -> 213, () -> 426);
         visionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .addProcessor(colourMassDetectionProcessor)
                 .build();
-
     }
 
     @Override
     public void init_loop() {
 
+
         double MEGABOMBA = colourMassDetectionProcessor.getLargestContourX();
         telemetry.addData("Currently Recorded Position", colourMassDetectionProcessor.getRecordedPropPosition());
         telemetry.addData("Camera State", visionPortal.getCameraState());
         telemetry.addData("Currently Detected Mass Center", "x: " + colourMassDetectionProcessor.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
-        telemetry.addData("Are:", colourMassDetectionProcessor.getLargestContourArea());
+        telemetry.addData("Area:", colourMassDetectionProcessor.getLargestContourArea());
     }
 
 

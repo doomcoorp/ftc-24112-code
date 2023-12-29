@@ -17,6 +17,7 @@ public class FieldCentricTest extends LinearOpMode {
     protected DcMotor right_arm;
     protected Servo arm2_servo;
     protected Servo hand_servo;
+    protected Servo drone_servo;
     protected ElapsedTime runtime = new ElapsedTime();
 
     @Override
@@ -33,6 +34,7 @@ public class FieldCentricTest extends LinearOpMode {
 
         arm2_servo = hardwareMap.get(Servo.class, "arm2_servo");
         hand_servo = hardwareMap.get(Servo.class, "hand_servo");
+        drone_servo = hardwareMap.get(Servo.class, "drone_servo");
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
         // reverse the left side instead.
@@ -85,51 +87,73 @@ public class FieldCentricTest extends LinearOpMode {
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
             //set direciton
-            if (gamepad1.y) {
-                if (isMainArmDirectionForward == 1) {
-                    left_arm.setDirection(DcMotor.Direction.REVERSE);
-                    right_arm.setDirection(DcMotor.Direction.FORWARD);
-                    isMainArmDirectionForward = 0;
-                } else if (isMainArmDirectionForward == 0) {
-                    left_arm.setDirection(DcMotor.Direction.FORWARD);
-                    right_arm.setDirection(DcMotor.Direction.REVERSE);
-                    isMainArmDirectionForward = 1;
-                }
+
+
+            //DRONE LAUNCH
+            if (gamepad1.dpad_up) {
+                drone_servo.setPosition(1);
             }
-            // pick up pixel w A
-            if (gamepad1.a) {
-                arm2_servo.setPosition(0.75);
-                while (arm2_servo.getPosition() == 0.75) {
-                    // arm 2 to floor
+
+
+            //OPEN/CLOSE CLAW
+            if (gamepad1.right_bumper) {
                     hand_servo.setPosition(-1);
-                    // wait to reach to floor
-                    if (gamepad1.dpad_left) {
-                        if (hand_servo.getPosition() == -1) {
-                            hand_servo.setPosition(1);
-                            arm2_servo.setPosition(-1);
-                        }
-                    }
                 }
-            }
-            // close / open hand w x
-            if (gamepad1.x && hand_servo.getPosition() == 1) {
-                hand_servo.setPosition(-1);
-            } else if (gamepad1.x && hand_servo.getPosition() == -1) {
+
+            if (gamepad1.left_bumper) {
                 hand_servo.setPosition(1);
             }
 
-            //Drop on backdrop
-            if (gamepad1.left_bumper) {
-                arm2_servo.setPosition(0.5);
-                while (arm2_servo.getPosition() == 0.5) {
-                    if (gamepad1.right_bumper) {
-                        hand_servo.setPosition(-1);
-                        sleep(600);
-                        arm2_servo.setPosition(-1);
-                    }
-                }
+
+            // LOWER ARM 2 / RAISE
+            if (gamepad1.x) {
+                arm2_servo.setPosition(1);
+            }
+            if (gamepad1.y) {
+                arm2_servo.setPosition(-1);
             }
 
+
+            // SMALL ARM / BIG ARM RAISE TO BACKDROP
+            if (gamepad1.dpad_right) {
+                arm2_servo.setPosition(0.5);
+                left_arm.setDirection(DcMotor.Direction.REVERSE);
+                right_arm.setDirection(DcMotor.Direction.FORWARD);
+                left_arm.setTargetPosition(-70);
+                right_arm.setTargetPosition(-70);
+                left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                left_arm.setPower(0.75);
+                right_arm.setPower(0.75);
+                while (opModeIsActive() && left_arm.isBusy()) {
+                }
+                left_arm.setPower(0);
+                right_arm.setPower(0);
+                sleep(600);
+                left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                isMainArmDirectionForward = 0;
+                          }
+            if(gamepad1.dpad_left) {
+                left_arm.setDirection(DcMotor.Direction.FORWARD);
+                right_arm.setDirection(DcMotor.Direction.REVERSE);
+                left_arm.setTargetPosition(0);
+                right_arm.setTargetPosition(0);
+                left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                left_arm.setPower(0.75);
+                right_arm.setPower(0.75);
+                while (opModeIsActive() && left_arm.isBusy()) {
+                }
+                left_arm.setPower(0);
+                right_arm.setPower(0);
+                sleep(600);
+                left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                isMainArmDirectionForward = 1;
+            }
+
+            //RAISE / LOWER BIG ARM
             if (gamepad1.b) {
                 if (isMainArmDirectionForward == 1) {
                     left_arm.setDirection(DcMotor.Direction.REVERSE);
@@ -138,8 +162,8 @@ public class FieldCentricTest extends LinearOpMode {
                     right_arm.setTargetPosition(-360);
                     left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    left_arm.setPower(0.6);
-                    right_arm.setPower(0.6);
+                    left_arm.setPower(0.75);
+                    right_arm.setPower(0.75);
                     while (opModeIsActive() && left_arm.isBusy()) {
                     }
                     left_arm.setPower(0);
@@ -147,6 +171,7 @@ public class FieldCentricTest extends LinearOpMode {
                     sleep(600);
                     left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    isMainArmDirectionForward = 0;
 
                 } else {
                     left_arm.setDirection(DcMotor.Direction.FORWARD);
@@ -155,8 +180,8 @@ public class FieldCentricTest extends LinearOpMode {
                     right_arm.setTargetPosition(0);
                     left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    left_arm.setPower(0.6);
-                    right_arm.setPower(0.6);
+                    left_arm.setPower(0.75);
+                    right_arm.setPower(0.75);
                     while (opModeIsActive() && left_arm.isBusy()) {
                     }
                     left_arm.setPower(0);
@@ -164,23 +189,26 @@ public class FieldCentricTest extends LinearOpMode {
                     sleep(600);
                     left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    isMainArmDirectionForward = 1;
                 }
             }
+
+
+
+
             telemetry.addData("Left front Power", leftFront.getPower());
             telemetry.addData("Left back Power", leftRear.getPower());
             telemetry.addData("Right back power", rightRear.getPower());
             telemetry.addData("right front power", rightFront.getPower());
             telemetry.addData("Left arm power", left_arm.getPower());
             telemetry.addData("Right arm power", right_arm.getPower());
-            telemetry.addData("LeftArm", left_arm.getCurrentPosition());
-            telemetry.addData("Right Arm", right_arm.getCurrentPosition());
+            telemetry.addData("LeftArm pos", left_arm.getCurrentPosition());
+            telemetry.addData("Right Arm pos ", right_arm.getCurrentPosition());
             telemetry.addData("arm2 servo direction", arm2_servo.getDirection());
             telemetry.addData("arm2 servo position ", arm2_servo.getPosition());
             telemetry.addData("hand servo direction", hand_servo.getDirection());
             telemetry.addData("hand servo position", hand_servo.getPosition());
             telemetry.addData("isMainArmForward", isMainArmDirectionForward);
-            telemetry.addData("larm current pos", left_arm.getCurrentPosition());
-            telemetry.addData("rarm current pos", right_arm.getCurrentPosition());
 
             telemetry.addData("larm target pos", left_arm.getTargetPosition());
             telemetry.addData("rarm target pos", right_arm.getTargetPosition());
@@ -188,6 +216,8 @@ public class FieldCentricTest extends LinearOpMode {
             telemetry.update();
 
 
+
+            //MECANUM MATH
             rotX = rotX * 1.1;  // this thing is here to counteract imperfect strafing
 
             // basically math to make sure all them have the same power

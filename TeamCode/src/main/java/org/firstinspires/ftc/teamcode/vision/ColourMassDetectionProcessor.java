@@ -24,8 +24,8 @@ import java.util.function.DoubleSupplier;
 
 public class ColourMassDetectionProcessor implements VisionProcessor {
 	private final DoubleSupplier minArea, left, right;
-	private final Scalar upper;
-	private final Scalar lower;
+	private final Scalar upperycrcb;
+	private final Scalar lowerycrcb;
 	private final TextPaint textPaint;
 	private final Paint linePaint;
 	private final ArrayList<MatOfPoint> contours;
@@ -38,10 +38,10 @@ public class ColourMassDetectionProcessor implements VisionProcessor {
 	private PropPositions recordedPropPosition = PropPositions.RIGHT;
 
 	
-	public ColourMassDetectionProcessor(@NonNull Scalar lower, @NonNull Scalar upper, DoubleSupplier minArea, DoubleSupplier left, DoubleSupplier right) {
+	public ColourMassDetectionProcessor(@NonNull Scalar lowerycrcb, @NonNull Scalar upperycrcb, DoubleSupplier minArea, DoubleSupplier left, DoubleSupplier right) {
 		this.contours = new ArrayList<>();
-		this.lower = lower;
-		this.upper = upper;
+		this.lowerycrcb = lowerycrcb;
+		this.upperycrcb = upperycrcb;
 		this.minArea = minArea;
 		this.left = left;
 		this.right = right;
@@ -93,7 +93,7 @@ public class ColourMassDetectionProcessor implements VisionProcessor {
 
 
 
-		Core.inRange(frame, lower, upper, frame);
+		Core.inRange(frame, lowerycrcb, upperycrcb, frame);
 
 
 		contours.clear();
