@@ -45,7 +45,7 @@ public class FieldCentricTest extends LinearOpMode {
         left_arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right_arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        arm2_servo.setPosition(-0.9);
+        arm2_servo.setPosition(-1);
         hand_servo.setPosition(1);
         //reverse left arm, set left and right to brake
         left_arm.setDirection(DcMotor.Direction.REVERSE);
@@ -85,28 +85,31 @@ public class FieldCentricTest extends LinearOpMode {
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
             //set direciton
-            if (gamepad1.y && left_arm.getDirection() == DcMotorSimple.Direction.FORWARD) {
-                left_arm.setDirection(DcMotor.Direction.REVERSE);
-                right_arm.setDirection(DcMotor.Direction.FORWARD);
-                isMainArmDirectionForward = 1;
-            } else if (gamepad1.y && left_arm.getDirection() == DcMotor.Direction.REVERSE) {
-                left_arm.setDirection(DcMotor.Direction.FORWARD);
-                right_arm.setDirection(DcMotor.Direction.REVERSE);
-                isMainArmDirectionForward = 0;
+            if (gamepad1.y) {
+                if (isMainArmDirectionForward == 1) {
+                    left_arm.setDirection(DcMotor.Direction.REVERSE);
+                    right_arm.setDirection(DcMotor.Direction.FORWARD);
+                    isMainArmDirectionForward = 0;
+                } else if (isMainArmDirectionForward == 0) {
+                    left_arm.setDirection(DcMotor.Direction.FORWARD);
+                    right_arm.setDirection(DcMotor.Direction.REVERSE);
+                    isMainArmDirectionForward = 1;
+                }
             }
             // pick up pixel w A
             if (gamepad1.a) {
-                // open claw
-                hand_servo.setPosition(-1);
-                // arm 2 to floor
                 arm2_servo.setPosition(0.75);
-                // wait to reach to floor
-                sleep(700);
-                // close claw
-                hand_servo.setPosition(1);
-                // wait for claw to close
-                sleep(300);
-                arm2_servo.setPosition(-0.9);
+                while (arm2_servo.getPosition() == 0.75) {
+                    // arm 2 to floor
+                    hand_servo.setPosition(-1);
+                    // wait to reach to floor
+                    if (gamepad1.dpad_left) {
+                        if (hand_servo.getPosition() == -1) {
+                            hand_servo.setPosition(1);
+                            arm2_servo.setPosition(-1);
+                        }
+                    }
+                }
             }
             // close / open hand w x
             if (gamepad1.x && hand_servo.getPosition() == 1) {
@@ -115,58 +118,69 @@ public class FieldCentricTest extends LinearOpMode {
                 hand_servo.setPosition(1);
             }
 
-            if (gamepad1.y) {
-                isMainArmDirectionForward = (isMainArmDirectionForward == 1) ? 0 : 1;
+            //Drop on backdrop
+            if (gamepad1.left_bumper) {
+                arm2_servo.setPosition(0.5);
+                while (arm2_servo.getPosition() == 0.5) {
+                    if (gamepad1.right_bumper) {
+                        hand_servo.setPosition(-1);
+                        sleep(600);
+                        arm2_servo.setPosition(-1);
+                    }
+                }
             }
 
             if (gamepad1.b) {
                 if (isMainArmDirectionForward == 1) {
                     left_arm.setDirection(DcMotor.Direction.REVERSE);
                     right_arm.setDirection(DcMotor.Direction.FORWARD);
-                    left_arm.setTargetPosition(-400);
-                    right_arm.setTargetPosition(-400);
-                    left_arm.setPower(0.5);
-                    right_arm.setPower(0.5);
+                    left_arm.setTargetPosition(-360);
+                    right_arm.setTargetPosition(-360);
                     left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    sleep(1000);
+                    left_arm.setPower(0.6);
+                    right_arm.setPower(0.6);
+                    while (opModeIsActive() && left_arm.isBusy()) {
+                    }
                     left_arm.setPower(0);
                     right_arm.setPower(0);
+                    sleep(600);
                     left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-                }
-                else {
+                } else {
                     left_arm.setDirection(DcMotor.Direction.FORWARD);
                     right_arm.setDirection(DcMotor.Direction.REVERSE);
-                    left_arm.setTargetPosition(-10);
-                    right_arm.setTargetPosition(-10);
+                    left_arm.setTargetPosition(0);
+                    right_arm.setTargetPosition(0);
                     left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    left_arm.setPower(0.8);
-                    right_arm.setPower(0.8);
-                    sleep(600);
+                    left_arm.setPower(0.6);
+                    right_arm.setPower(0.6);
+                    while (opModeIsActive() && left_arm.isBusy()) {
+                    }
                     left_arm.setPower(0);
                     right_arm.setPower(0);
+                    sleep(600);
                     left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 }
             }
-                telemetry.addData("Left front Power", leftFront.getPower());
-                telemetry.addData("Left back Power", leftRear.getPower());
-                telemetry.addData("Right back power", rightRear.getPower());
-                telemetry.addData("right front power", rightFront.getPower());
-                telemetry.addData("Left arm power", left_arm.getPower());
-                telemetry.addData("Right arm power", right_arm.getPower());
-                telemetry.addData("LeftArm", left_arm.getCurrentPosition());
-                telemetry.addData("Right Arm", right_arm.getCurrentPosition());
-                telemetry.addData("arm2 servo direction", arm2_servo.getDirection());
-                telemetry.addData("arm2 servo position ", arm2_servo.getPosition());
-                telemetry.addData("hand servo direction", hand_servo.getDirection());
-                telemetry.addData("hand servo position", hand_servo.getPosition());
-                telemetry.addData("isMainArmForward", isMainArmDirectionForward);
-                telemetry.addData("larm current pos", left_arm.getCurrentPosition());
-                telemetry.addData("rarm current pos", right_arm.getCurrentPosition());
+            telemetry.addData("Left front Power", leftFront.getPower());
+            telemetry.addData("Left back Power", leftRear.getPower());
+            telemetry.addData("Right back power", rightRear.getPower());
+            telemetry.addData("right front power", rightFront.getPower());
+            telemetry.addData("Left arm power", left_arm.getPower());
+            telemetry.addData("Right arm power", right_arm.getPower());
+            telemetry.addData("LeftArm", left_arm.getCurrentPosition());
+            telemetry.addData("Right Arm", right_arm.getCurrentPosition());
+            telemetry.addData("arm2 servo direction", arm2_servo.getDirection());
+            telemetry.addData("arm2 servo position ", arm2_servo.getPosition());
+            telemetry.addData("hand servo direction", hand_servo.getDirection());
+            telemetry.addData("hand servo position", hand_servo.getPosition());
+            telemetry.addData("isMainArmForward", isMainArmDirectionForward);
+            telemetry.addData("larm current pos", left_arm.getCurrentPosition());
+            telemetry.addData("rarm current pos", right_arm.getCurrentPosition());
 
             telemetry.addData("larm target pos", left_arm.getTargetPosition());
             telemetry.addData("rarm target pos", right_arm.getTargetPosition());
@@ -174,19 +188,20 @@ public class FieldCentricTest extends LinearOpMode {
             telemetry.update();
 
 
-                rotX = rotX * 1.1;  // this thing is here to counteract imperfect strafing
+            rotX = rotX * 1.1;  // this thing is here to counteract imperfect strafing
 
-                // basically math to make sure all them have the same power
-                double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-                double frontLeftPower = (rotY + rotX + rx) / denominator;
-                double backLeftPower = (rotY - rotX + rx) / denominator;
-                double frontRightPower = (rotY - rotX - rx) / denominator;
-                double backRightPower = (rotY + rotX - rx) / denominator;
+            // basically math to make sure all them have the same power
+            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+            double frontLeftPower = (rotY + rotX + rx) / denominator;
+            double backLeftPower = (rotY - rotX + rx) / denominator;
+            double frontRightPower = (rotY - rotX - rx) / denominator;
+            double backRightPower = (rotY + rotX - rx) / denominator;
 
-                leftFront.setPower(frontLeftPower);
-                leftRear.setPower(backLeftPower);
-                rightFront.setPower(frontRightPower);
-                rightRear.setPower(backRightPower);
-            }
+            leftFront.setPower(frontLeftPower);
+            leftRear.setPower(backLeftPower);
+            rightFront.setPower(frontRightPower);
+            rightRear.setPower(backRightPower);
         }
     }
+}
+

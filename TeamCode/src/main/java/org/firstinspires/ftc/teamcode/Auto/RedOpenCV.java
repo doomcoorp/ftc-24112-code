@@ -14,28 +14,14 @@ import org.opencv.core.Scalar;
 public class RedOpenCV extends OpMode {
     private VisionPortal visionPortal;
     private ColourMassDetectionProcessor colourMassDetectionProcessor;
-    private final ExposureControl.Mode exposureMode = ExposureControl.Mode.AperturePriority;
-    ExposureControl myExposureControl;  // declare exposure control object
-    long minExp;
-    long maxExp;
-    long curExp;
-
-
     @Override
     public void init() {
-
-        Scalar lower = new Scalar(90, 100, 100);
-        Scalar upper = new Scalar(180, 255, 255);
+        Scalar lower = new Scalar(0, 100, 20);
+        Scalar upper = new Scalar(170, 255, 255);
         double minArea = 2000;
 
 
-        colourMassDetectionProcessor = new ColourMassDetectionProcessor(
-                lower,
-                upper,
-                () -> minArea,
-                () -> 213,
-                () -> 426
-        );
+        colourMassDetectionProcessor = new ColourMassDetectionProcessor(lower, upper, () -> minArea, () -> 213, () -> 426);
         visionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .addProcessor(colourMassDetectionProcessor)
@@ -50,7 +36,8 @@ public class RedOpenCV extends OpMode {
         telemetry.addData("Currently Recorded Position", colourMassDetectionProcessor.getRecordedPropPosition());
         telemetry.addData("Camera State", visionPortal.getCameraState());
         telemetry.addData("Currently Detected Mass Center", "x: " + colourMassDetectionProcessor.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
-        }
+        telemetry.addData("Are:", colourMassDetectionProcessor.getLargestContourArea());
+    }
 
 
 
