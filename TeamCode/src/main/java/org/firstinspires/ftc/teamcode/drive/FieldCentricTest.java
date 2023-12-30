@@ -46,7 +46,8 @@ public class FieldCentricTest extends LinearOpMode {
         //Set servo position
         left_arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right_arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        left_arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right_arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm2_servo.setPosition(-1);
         hand_servo.setPosition(1);
         //reverse left arm, set left and right to brake
@@ -56,14 +57,6 @@ public class FieldCentricTest extends LinearOpMode {
         // Set arm position
         isMainArmDirectionForward = 1;
 
-        // Retrieve the IMU from the hardware map
-        IMU imu = hardwareMap.get(IMU.class, "imu");
-        // Adjust the orientation parameters to match your robot
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT));
-        // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
-        imu.initialize(parameters);
 
         waitForStart();
 
@@ -71,31 +64,50 @@ public class FieldCentricTest extends LinearOpMode {
 
         while (opModeIsActive()) {
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
-            double x = gamepad1.left_stick_x;
+            double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
 
-            // This button choice was made so that it is hard to hit on accident,
-            // it can be freely changed based on preference.
-            // The equivalent button is start on Xbox-style controllers.
-            if (gamepad1.options) {
-                imu.resetYaw();
+            // Denominator is the largest motor power (absolute value) or 1
+            // This ensures all the powers maintain the same ratio,
+            // but only if at least one is out of the range [-1, 1]
+            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+            double frontLeftPower = (y + x + rx) / denominator;
+            double backLeftPower = (y - x + rx) / denominator;
+            double frontRightPower = (y - x - rx) / denominator;
+            double backRightPower = (y + x - rx) / denominator;
+
+
+            // Set wheel power
+            leftFront.setPower(frontLeftPower);
+            leftRear.setPower(backLeftPower);
+            rightFront.setPower(frontRightPower);
+            rightRear.setPower(backRightPower);
+
+            //LOWER / RAISE BIG ARM
+            if(gamepad1.left_trigger != 1) {
+                left_arm.setDirection(DcMotor.Direction.REVERSE);
+                right_arm.setDirection(DcMotor.Direction.FORWARD);
+                left_arm.setPower(gamepad1.left_trigger);
+                right_arm.setPower(gamepad1.left_trigger);
             }
-
-            double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-
-            // rotate the movement direction counter to counter rotation
-            double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-            double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-            //set direciton
-
+            if(gamepad1.right_trigger != 0) {
+                left_arm.setDirection(DcMotor.Direction.FORWARD);
+                right_arm.setDirection(DcMotor.Direction.REVERSE);
+                left_arm.setPower(gamepad1.right_trigger);
+                right_arm.setPower(gamepad1.right_trigger);
+            }
 
             //DRONE LAUNCH
             if (gamepad1.dpad_up) {
+                drone_servo.setPosition(-1);
+            }
+            if (gamepad1.dpad_down) {
                 drone_servo.setPosition(1);
             }
 
 
-            //OPEN/CLOSE CLAW
+
+            // OPEN/CLOSE CLAW
             if (gamepad1.right_bumper) {
                     hand_servo.setPosition(-1);
                 }
@@ -109,91 +121,9 @@ public class FieldCentricTest extends LinearOpMode {
             if (gamepad1.x) {
                 arm2_servo.setPosition(1);
             }
-            if (gamepad1.y) {
+            if (gamepad1.b) {
                 arm2_servo.setPosition(-1);
             }
-
-
-            // SMALL ARM / BIG ARM RAISE TO BACKDROP
-            if (gamepad1.dpad_right) {
-                arm2_servo.setPosition(0.5);
-                left_arm.setDirection(DcMotor.Direction.REVERSE);
-                right_arm.setDirection(DcMotor.Direction.FORWARD);
-                left_arm.setTargetPosition(-70);
-                right_arm.setTargetPosition(-70);
-                left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                left_arm.setPower(0.75);
-                right_arm.setPower(0.75);
-                while (opModeIsActive() && left_arm.isBusy()) {
-                }
-                left_arm.setPower(0);
-                right_arm.setPower(0);
-                sleep(600);
-                left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                isMainArmDirectionForward = 0;
-                          }
-            if(gamepad1.dpad_left) {
-                left_arm.setDirection(DcMotor.Direction.FORWARD);
-                right_arm.setDirection(DcMotor.Direction.REVERSE);
-                left_arm.setTargetPosition(0);
-                right_arm.setTargetPosition(0);
-                left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                left_arm.setPower(0.75);
-                right_arm.setPower(0.75);
-                while (opModeIsActive() && left_arm.isBusy()) {
-                }
-                left_arm.setPower(0);
-                right_arm.setPower(0);
-                sleep(600);
-                left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                isMainArmDirectionForward = 1;
-            }
-
-            //RAISE / LOWER BIG ARM
-            if (gamepad1.b) {
-                if (isMainArmDirectionForward == 1) {
-                    left_arm.setDirection(DcMotor.Direction.REVERSE);
-                    right_arm.setDirection(DcMotor.Direction.FORWARD);
-                    left_arm.setTargetPosition(-360);
-                    right_arm.setTargetPosition(-360);
-                    left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    left_arm.setPower(0.75);
-                    right_arm.setPower(0.75);
-                    while (opModeIsActive() && left_arm.isBusy()) {
-                    }
-                    left_arm.setPower(0);
-                    right_arm.setPower(0);
-                    sleep(600);
-                    left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    isMainArmDirectionForward = 0;
-
-                } else {
-                    left_arm.setDirection(DcMotor.Direction.FORWARD);
-                    right_arm.setDirection(DcMotor.Direction.REVERSE);
-                    left_arm.setTargetPosition(0);
-                    right_arm.setTargetPosition(0);
-                    left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    left_arm.setPower(0.75);
-                    right_arm.setPower(0.75);
-                    while (opModeIsActive() && left_arm.isBusy()) {
-                    }
-                    left_arm.setPower(0);
-                    right_arm.setPower(0);
-                    sleep(600);
-                    left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    isMainArmDirectionForward = 1;
-                }
-            }
-
-
 
 
             telemetry.addData("Left front Power", leftFront.getPower());
@@ -217,20 +147,6 @@ public class FieldCentricTest extends LinearOpMode {
 
 
 
-            //MECANUM MATH
-            rotX = rotX * 1.1;  // this thing is here to counteract imperfect strafing
-
-            // basically math to make sure all them have the same power
-            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-            double frontLeftPower = (rotY + rotX + rx) / denominator;
-            double backLeftPower = (rotY - rotX + rx) / denominator;
-            double frontRightPower = (rotY - rotX - rx) / denominator;
-            double backRightPower = (rotY + rotX - rx) / denominator;
-
-            leftFront.setPower(frontLeftPower);
-            leftRear.setPower(backLeftPower);
-            rightFront.setPower(frontRightPower);
-            rightRear.setPower(backRightPower);
         }
     }
 }
