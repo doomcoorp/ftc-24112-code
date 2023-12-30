@@ -23,7 +23,7 @@ public class FieldCentricTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         int isMainArmDirectionForward;
-        // Declare our motors and servos
+        // Declare motors and servos
         DcMotor leftFront = hardwareMap.dcMotor.get("leftFront");
         DcMotor leftRear = hardwareMap.dcMotor.get("leftRear");
         DcMotor rightFront = hardwareMap.dcMotor.get("rightFront");
@@ -35,22 +35,21 @@ public class FieldCentricTest extends LinearOpMode {
         arm2_servo = hardwareMap.get(Servo.class, "arm2_servo");
         hand_servo = hardwareMap.get(Servo.class, "hand_servo");
         drone_servo = hardwareMap.get(Servo.class, "drone_servo");
-        // Reverse the right side motors. This may be wrong for your setup.
-        // If your robot moves backwards when commanded to go forwards,
-        // reverse the left side instead.
-        // See the note about this earlier on this page.
+
+        // Reverse motors
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        //Set servo position
+        //Set servo position, reset arm encoders
         left_arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right_arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left_arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right_arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm2_servo.setPosition(-1);
         hand_servo.setPosition(1);
-        //reverse left arm, set left and right to brake
+
+        //Reverse the left arm motor, set zero power behavior to brake
         left_arm.setDirection(DcMotor.Direction.REVERSE);
         left_arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         right_arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -84,15 +83,17 @@ public class FieldCentricTest extends LinearOpMode {
             rightRear.setPower(backRightPower);
 
             //LOWER / RAISE BIG ARM
+            // Left is up
             if(gamepad1.left_trigger != 1) {
-                left_arm.setDirection(DcMotor.Direction.REVERSE);
-                right_arm.setDirection(DcMotor.Direction.FORWARD);
+                left_arm.setDirection(DcMotor.Direction.FORWARD);
+                right_arm.setDirection(DcMotor.Direction.REVERSE);
                 left_arm.setPower(gamepad1.left_trigger);
                 right_arm.setPower(gamepad1.left_trigger);
             }
+            // right is down
             if(gamepad1.right_trigger != 0) {
-                left_arm.setDirection(DcMotor.Direction.FORWARD);
-                right_arm.setDirection(DcMotor.Direction.REVERSE);
+                left_arm.setDirection(DcMotor.Direction.REVERSE);
+                right_arm.setDirection(DcMotor.Direction.FORWARD );
                 left_arm.setPower(gamepad1.right_trigger);
                 right_arm.setPower(gamepad1.right_trigger);
             }
@@ -117,13 +118,14 @@ public class FieldCentricTest extends LinearOpMode {
             }
 
 
-            // LOWER ARM 2 / RAISE
+            // LOWER/RAISE SMALL ARM
             if (gamepad1.x) {
                 arm2_servo.setPosition(1);
             }
             if (gamepad1.b) {
                 arm2_servo.setPosition(-1);
             }
+
 
 
             telemetry.addData("Left front Power", leftFront.getPower());
@@ -142,6 +144,9 @@ public class FieldCentricTest extends LinearOpMode {
 
             telemetry.addData("larm target pos", left_arm.getTargetPosition());
             telemetry.addData("rarm target pos", right_arm.getTargetPosition());
+
+            telemetry.addData("larm direction", left_arm.getDirection());
+            telemetry.addData("rarm directoin", right_arm.getDirection());
 
             telemetry.update();
 
