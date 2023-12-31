@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
+@Disabled
 
 @Autonomous(name="Blue Row 4", group="Robot")
 public class OCVAutoA4 extends AutonomousBase {

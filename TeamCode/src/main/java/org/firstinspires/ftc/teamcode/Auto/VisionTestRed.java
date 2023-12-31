@@ -9,14 +9,16 @@ import org.firstinspires.ftc.teamcode.vision.PropProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.opencv.core.Scalar;
 
-@Autonomous(name = "WAJAIUWDAIUWDHGAWUIHDILUJDAW", group = "Robot")
-public class VisionRedTest extends OpMode {
+@Autonomous(name = "RedCV", group = "Robot")
+public class VisionTestRed extends OpMode {
+    // declare objects
     private VisionPortal visionPortal;
     private PropProcessor propProcessor;
 
 
     @Override
     public void init() {
+        // build la vision portal
         propProcessor = new PropProcessor();
         visionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
@@ -29,13 +31,17 @@ public class VisionRedTest extends OpMode {
 
 
         telemetry.addData("Currently Recorded Position", propProcessor.getSelected());
+        telemetry.addData("Left Saturation", propProcessor.getLeftSaturation());
+        telemetry.addData("Right Saturation", propProcessor.getRightSaturation());
+        telemetry.addData("Middle saturation", propProcessor.getMiddleSaturation());
+        telemetry.update();
     }
 
 
 
     @Override
     public void start() {
-
+        // stop camera stream whne u start
         if (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING) {
             visionPortal.stopLiveView();
             visionPortal.stopStreaming();
@@ -51,6 +57,7 @@ public class VisionRedTest extends OpMode {
 
 
     @Override
+    // close vision porrtal when you stop
 public void stop() {
         visionPortal.close();
 }
