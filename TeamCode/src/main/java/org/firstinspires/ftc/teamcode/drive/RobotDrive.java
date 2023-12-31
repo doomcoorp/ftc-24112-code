@@ -10,7 +10,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 // most of the major changes that i did were that you have to manually close/ open claw, and manually lower/raise small arm and big arm
-// i can change it back later if driver wants 
+// that way you can move around after doing whatever
+// so if your not aligned perfectly horzontially/vertically you can still move around and correct your course so you dont have to reset whatever and try it again
+// i can change it back later if driver wants
 
 @TeleOp(name="Robot Drive")
 public class RobotDrive extends LinearOpMode {

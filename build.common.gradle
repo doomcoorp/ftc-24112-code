@@ -120,6 +120,7 @@ android {
     ndkVersion '21.3.6528147'
 }
 
-repositories {
+repositories {        maven { url = 'https://jitpack.io/' }
+    maven { url = 'https://maven.brott.dev' }
 }
 

@@ -1,68 +1,27 @@
-package org.firstinspires.ftc.teamcode.mechanisms
+package org.firstinspires.ftc.teamcode.vision
 
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
+import org.atomicrobotics3805.cflib.TelemetryController
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration
-import org.firstinspires.ftc.vision.VisionPortal
 import org.firstinspires.ftc.vision.VisionProcessor
 import org.opencv.core.Core
 import org.opencv.core.Mat
 import org.opencv.core.Rect
 import org.opencv.imgproc.Imgproc
+import org.atomicrobotics3805.cflib.TelemetryController.telemetry
 
-object DetectionMechanism: Subsystem {
-    var visionPortal: VisionPortal? = null
-
-    var selectedPosition: PropProcessor.Selected = PropProcessor.Selected.NONE
-
-    lateinit var propProcessor: PropProcessor
-
-    class DetectCommand: Command() {
-        override val _isDone: Boolean
-            get() = Constants.opMode.isStarted
-        override fun start() {
-            propProcessor = PropProcessor()
-
-            val builder = VisionPortal.Builder()
-
-            builder.setCamera(
-                    Constants.opMode.hardwareMap.get<WebcamName>(
-                            WebcamName::class.java,
-                            "Webcam 1"
-                    )
-            )
-
-            builder.addProcessor(propProcessor)
-
-            visionPortal = builder.build()
-        }
-
-        override fun execute() {
-            telemetry.addData("satRectLeft", propProcessor.satRectLeft)
-            telemetry.addData("satRectMiddle", propProcessor.satRectMiddle)
-            telemetry.addData("satRectRight", propProcessor.satRectRight)
-            telemetry.addData("selection", propProcessor.selection)
-            selectedPosition = propProcessor.selection
-        }
-
-        override fun end(interrupted: Boolean) {
-            visionPortal?.stopStreaming()
-        }
-    }
-}
-
-class PropProcessor: VisionProcessor {
-    var rectLeft = Rect(20, 210, 80, 80)
-    var rectMiddle = Rect(280, 160, 80, 80)
-    var rectRight = Rect(540, 210, 80, 80)
-    var selection = Selected.NONE
+ class PropProcessor : VisionProcessor {
+      var rectLeft = Rect(110, 380, 80, 80)
+      var rectMiddle = Rect(280, 360, 80, 80)
+      var rectRight = Rect(450, 380, 80, 80)
+     var selection = Selected.NONE
     var submat = Mat()
     var hsvMat = Mat()
-    var satRectLeft: Double = 0.0
-    var satRectMiddle: Double = 0.0
-    var satRectRight: Double = 0.0
+    var satRectLeft : Double = 0.0
+    var satRectMiddle : Double = 0.0
+    var satRectRight : Double = 0.0
     override fun init(width: Int, height: Int, calibration: CameraCalibration) {}
     override fun processFrame(frame: Mat, captureTimeNanos: Long): Any {
         Imgproc.cvtColor(frame, hsvMat, Imgproc.COLOR_RGB2HSV)
@@ -79,7 +38,7 @@ class PropProcessor: VisionProcessor {
 
     }
 
-    protected fun getAvgSaturation(input: Mat, rect: Rect?): Double {
+     fun getAvgSaturation(input: Mat, rect: Rect?): Double {
         submat = input.submat(rect)
         val color = Core.mean(submat)
         return color.`val`[1]
@@ -94,12 +53,12 @@ class PropProcessor: VisionProcessor {
     }
 
     override fun onDrawFrame(
-            canvas: Canvas,
-            onscreenWidth: Int,
-            onscreenHeight: Int,
-            scaleBmpPxToCanvasPx: Float,
-            scaleCanvasDensity: Float,
-            userContext: Any
+        canvas: Canvas,
+        onscreenWidth: Int,
+        onscreenHeight: Int,
+        scaleBmpPxToCanvasPx: Float,
+        scaleCanvasDensity: Float,
+        userContext: Any
     ) {
         val selectedPaint = Paint()
         selectedPaint.color = Color.RED
@@ -138,19 +97,31 @@ class PropProcessor: VisionProcessor {
         }
     }
 
-    enum class Selected {
+    public enum class Selected {
         NONE, LEFT, MIDDLE, RIGHT
     }
-//    public fun getSelection (): Selected {
+     public fun getSelected () : Selected {
+         return selection;
+     }
+     public fun getsatRectMiddle () : Double {
+        return satRectMiddle
+     }
+     public fun getsatRectLeft () : Double {
+         return satRectLeft
+     }
+     public fun getsatRectRight () : Double {
+         return satRectRight
+     }
+         //public
+//    public fun getSelection () : Selected {
 //        return selection
 //    }
-//    public fun getSatRectLeft (): Double {
+//    public fun getSatRectLeft () : Double {
 //        return satRectLeft
 //    }
-//    public fun getSatRectMiddle (): Double {
+//    public fun getSatRectMiddle () : Double {
 //        return satRectMiddle
 //    }
-//    public fun getSatRectRight (): Double {
-//        return satRectRight
-//    }
+   //public fun getSatRectRight () : Double {
+  //   return satRectRight    }
 }
