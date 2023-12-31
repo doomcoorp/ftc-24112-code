@@ -14,8 +14,8 @@ import org.opencv.core.Scalar;
 public class RedOpenCV extends OpMode {
     private VisionPortal visionPortal;
     private ColourMassDetectionProcessor colourMassDetectionProcessor;
-    Scalar lowerycrcb = new Scalar(0.0, 90, 200);
-    Scalar upperycrcb = new Scalar(255, 130, 260);
+    Scalar lowerycrcb = new Scalar(110, 130, 100);
+    Scalar upperycrcb = new Scalar(140, 255, 255);
     double minArea = 2000;  
     public volatile boolean error = false;
     public volatile Exception debug;

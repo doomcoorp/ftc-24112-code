@@ -89,7 +89,7 @@ public class ColourMassDetectionProcessor implements VisionProcessor {
 
 
 
-		Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGB2YCrCb);
+		Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGB2HSV);
 
 
 
