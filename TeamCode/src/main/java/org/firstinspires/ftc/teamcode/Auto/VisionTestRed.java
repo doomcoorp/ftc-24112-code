@@ -10,7 +10,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.opencv.core.Scalar;
 
 @Autonomous(name = "WAJAIUWDAIUWDHGAWUIHDILUJDAW", group = "Robot")
-public class TEST extends OpMode {
+public class VisionRedTest extends OpMode {
     private VisionPortal visionPortal;
     private PropProcessor propProcessor;
 
