@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.drive.tuningOpmodes.StandardTrackingWheelLocalizer;
 
 /**
  * Opmode designed to assist the user in tuning the `StandardTrackingWheelLocalizer`'s
@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
  *
  * Tuning Routine:
  *
- * 1. Set the LATERAL_DISTANCE value in StandardTrackingWheelLocalizer.java to the physical
+ * 1. Set the LATERAL_DISTANCE value in SampleTankDrive.java to the physical
  * measured value. This need only be an estimated value as you will be tuning it anyways.
  *
  * 2. Make a mark on the bot (with a piece of tape or sharpie or however you wish) and make an
@@ -42,7 +42,7 @@ import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
  * on the bot and on the ground you created earlier should be lined up.
  *
  * 8. Your effective LATERAL_DISTANCE will be given. Stick this value into your
- * StandardTrackingWheelLocalizer.java class.
+ * SampleTankDrive.java class.
  *
  * 9. If this value is incorrect, run the routine again while adjusting the LATERAL_DISTANCE value
  * yourself. Read the heading output and follow the advice stated in the note below to manually

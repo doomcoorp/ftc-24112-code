@@ -3,19 +3,17 @@ package org.firstinspires.ftc.teamcode.vision
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import org.atomicrobotics3805.cflib.TelemetryController
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration
 import org.firstinspires.ftc.vision.VisionProcessor
 import org.opencv.core.Core
 import org.opencv.core.Mat
 import org.opencv.core.Rect
 import org.opencv.imgproc.Imgproc
-import org.atomicrobotics3805.cflib.TelemetryController.telemetry
 
  class PropProcessor : VisionProcessor {
-      var rectLeft = Rect(110, 380, 80, 80)
-      var rectMiddle = Rect(280, 360, 80, 80)
-      var rectRight = Rect(450, 380, 80, 80)
+      var rectLeft = Rect(10, 360, 100, 80)
+      var rectMiddle = Rect(285, 310, 100, 80)
+      var rectRight = Rect(530, 360, 100, 80)
      var selection = Selected.NONE
     var submat = Mat()
     var hsvMat = Mat()

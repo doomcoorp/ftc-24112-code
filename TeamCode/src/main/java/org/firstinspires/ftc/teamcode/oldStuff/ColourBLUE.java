@@ -1,14 +1,15 @@
 package org.firstinspires.ftc.teamcode.oldStuff;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
-import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
+import org.firstinspires.ftc.teamcode.oldStuff.ColourMassDetectionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.opencv.core.Scalar;
-
+@Disabled
 @Autonomous(name = "BLUEOPENCV", group = "Robot")
 public class ColourBLUE extends OpMode {
     private VisionPortal visionPortal;

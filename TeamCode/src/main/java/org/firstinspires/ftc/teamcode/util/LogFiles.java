@@ -18,8 +18,8 @@ import org.firstinspires.ftc.ftccommon.external.WebHandlerRegistrar;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
-import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.drive.tuningOpmodes.SampleTankDrive;
+import org.firstinspires.ftc.teamcode.drive.tuningOpmodes.StandardTrackingWheelLocalizer;
 
 import java.io.File;
 import java.io.FileInputStream;

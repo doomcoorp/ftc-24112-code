@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
-import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
+import org.firstinspires.ftc.teamcode.oldStuff.ColourMassDetectionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.opencv.core.Scalar;
 import java.util.concurrent.TimeUnit;

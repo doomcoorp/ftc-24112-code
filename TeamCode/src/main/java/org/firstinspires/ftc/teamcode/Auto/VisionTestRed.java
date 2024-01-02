@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.vision.PropProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.opencv.core.Scalar;
 
-@Autonomous(name = "RedCV", group = "Robot")
+@Autonomous(name = "Opencv", group = "Robot")
 public class VisionTestRed extends OpMode {
     // declare objects
     private VisionPortal visionPortal;
@@ -31,9 +31,9 @@ public class VisionTestRed extends OpMode {
 
 
         telemetry.addData("Currently Recorded Position", propProcessor.getSelected());
-        telemetry.addData("Left Saturation", propProcessor.getLeftSaturation());
-        telemetry.addData("Right Saturation", propProcessor.getRightSaturation());
-        telemetry.addData("Middle saturation", propProcessor.getMiddleSaturation());
+        telemetry.addData("Left Saturation", propProcessor.getsatRectLeft());
+        telemetry.addData("Right Saturation", propProcessor.getsatRectRight());
+        telemetry.addData("Middle saturation", propProcessor.getsatRectMiddle());
         telemetry.update();
     }
 
