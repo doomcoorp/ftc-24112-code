@@ -13,6 +13,7 @@ import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 
+
 public class MeepMeepTesting {
     public static void main(String[] args) {
         // Declare a MeepMeep instance
@@ -21,23 +22,55 @@ public class MeepMeepTesting {
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Required: Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
+                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 13.3)
                 // Option: Set theme. Default = ColorSchemeRedDark()
                 .setColorScheme(new ColorSchemeRedDark())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, -61, Math.toRadians(90)))
-                                .forward(30)
-                                .turn(Math.toRadians(90))
-                                .forward(30)
-                                .addDisplacementMarker(() -> {
-                                    /* Everything in the marker callback should be commented out */
-
-                                    // bot.shooter.shoot()
-                                    // bot.wobbleArm.lower()
+                        drive.trajectorySequenceBuilder(new Pose2d(12, -61, Math.toRadians(270)))
+                                .back(38)
+                                // move back
+                                .lineToLinearHeading(new Pose2d(12,-35, Math.toRadians(90)))
+                                //wait for lower arm
+                                .waitSeconds(1)
+                                //open claw distance required
+                                .back(1)
+                                .waitSeconds(0.5)
+                                .back(2)
+                                .waitSeconds(0.3)
+                                .splineToSplineHeading(new Pose2d(37, -35, Math.toRadians(180)), Math.toRadians(0))
+                                .waitSeconds(0)
+                                .back(1)
+                                .waitSeconds(2)
+                                .strafeLeft(1)
+                                .waitSeconds(2)
+                                .strafeLeft(23)
+                                .back(17)
+                                .waitSeconds(30)
+                                // lower arm 2
+                                .addDisplacementMarker(48, () -> {
                                 })
-                                .turn(Math.toRadians(90))
-                                .splineTo(new Vector2d(10, 15), 0)
-                                .turn(Math.toRadians(90))
+                                // open claw
+                                .addDisplacementMarker(50, () -> {
+
+                                })
+                                // close claw, raise arm 2
+                                .addDisplacementMarker(51,() -> {
+                                })
+                                .addDisplacementMarker(53, () -> {
+                                })
+                                // raise big arm to backdrop
+                                .addTemporalMarker(10.4, () -> {
+
+                                })
+
+
+                                // open claw
+                                .addTemporalMarker(12.7, () -> {
+                                })
+                                // lower arm and claw
+                                .addTemporalMarker(15, () -> {
+
+                                })
                                 .build()
                 );
 

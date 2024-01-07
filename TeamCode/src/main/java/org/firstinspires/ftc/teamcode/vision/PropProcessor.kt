@@ -20,6 +20,7 @@ import org.opencv.imgproc.Imgproc
     var satRectLeft : Double = 0.0
     var satRectMiddle : Double = 0.0
     var satRectRight : Double = 0.0
+
     override fun init(width: Int, height: Int, calibration: CameraCalibration) {}
     override fun processFrame(frame: Mat, captureTimeNanos: Long): Any {
         Imgproc.cvtColor(frame, hsvMat, Imgproc.COLOR_RGB2HSV)
