@@ -50,8 +50,8 @@ public class RobotDrive extends LinearOpMode {
         right_arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left_arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right_arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        arm2_servo.setPosition(-1);
-        hand_servo.setPosition(1);
+        arm2_servo.setPosition(1);
+        hand_servo.setPosition(0.2);
 
         //Reverse the left arm motor, set zero power behavior to brake
         left_arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -66,6 +66,14 @@ public class RobotDrive extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
+            if (isMainArmDirectionForward == 1) {
+                left_arm.setDirection(DcMotor.Direction.REVERSE);
+                right_arm.setDirection(DcMotor.Direction.FORWARD);
+            } else {
+                left_arm.setDirection(DcMotor.Direction.FORWARD);
+                right_arm.setDirection(DcMotor.Direction.REVERSE);
+            }
+
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
@@ -97,13 +105,6 @@ public class RobotDrive extends LinearOpMode {
                 isMainArmDirectionForward = isMainArmDirectionForward*-1;
             }
 
-            if (isMainArmDirectionForward == 1) {
-                left_arm.setDirection(DcMotor.Direction.REVERSE);
-                right_arm.setDirection(DcMotor.Direction.FORWARD);
-            } else {
-                left_arm.setDirection(DcMotor.Direction.FORWARD);
-                right_arm.setDirection(DcMotor.Direction.REVERSE);
-            }
             // you can ignore this, this kind of was a test to see if we could put stuff onto the backdrop from the front
             if (gamepad1.dpad_right) {
                     arm2_servo.setPosition(0.5);
@@ -154,7 +155,7 @@ public class RobotDrive extends LinearOpMode {
 
             // OPEN/CLOSE CLAW
             if (gamepad1.right_bumper) {
-                    hand_servo.setPosition(-0.5);
+                    hand_servo.setPosition(0.2);
                 }
 
             if (gamepad1.left_bumper) {
@@ -164,10 +165,10 @@ public class RobotDrive extends LinearOpMode {
 
             // LOWER/RAISE SMALL ARM
             if (gamepad1.x) {
-                arm2_servo.setPosition(0.8);
+                arm2_servo.setPosition(1);
             }
             if (gamepad1.b) {
-                arm2_servo.setPosition(-0.8);
+                arm2_servo.setPosition(0);
             }
             // another big arm test, copied from old code. both going up and down work
             if (gamepad1.a) {

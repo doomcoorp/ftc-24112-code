@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.drive;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.drive.Drive;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
@@ -34,10 +35,9 @@ public class DriveConstants {
      * If using the built-in motor velocity PID, update MOTOR_VELO_PID with the tuned coefficients
      * from DriveVelocityPIDTuner.
      */
-    public static final boolean RUN_USING_ENCODER = true;
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0  , 0, 0,
-      12.69873114675213);
-    // f coeff is 12.96
+    public static final boolean RUN_USING_ENCODER = false;
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
+            11.7025);
 
     /*
      * These are physical constants that can be determined from your robot (including the track
@@ -45,11 +45,11 @@ public class DriveConstants {
      * free to chose whichever linear distance unit they would like so long as it is consistently
      * used. The default values were selected with inches in mind. Road runner uses radians for
      * angular distances although most angular parameters are wrapped in Math.toRadians() for
-         * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
+     * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
     public static double WHEEL_RADIUS = 1.4763; // in
-    public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 14.3; // in
+    public static double GEAR_RATIO = 1.0500966225510452504562156239342; // output (wheel) speed / input (motor) speed
+    public static double TRACK_WIDTH = 13.23; // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -57,11 +57,9 @@ public class DriveConstants {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    public static double kV = 0.0195;
-    public static double kA = 0.0005;
-    public static double kStatic = 0.005    ;
-    public static RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIR = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-    public static RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIR = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
+    public static double kV = 0.0212;
+    public static double kA = 0.002;
+    public static double kStatic = 0.05104;
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -91,10 +89,10 @@ public class DriveConstants {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
      
      */
-    public static double MAX_VEL = 39.90884130667677;
-    public static double MAX_ACCEL = 34.50870787062556;
-    public static double MAX_ANG_VEL = 3.1180500984191895;
-    public static double MAX_ANG_ACCEL = 2.28139076928265;
+    public static double MAX_VEL = 41.065033847087705;
+    public static double MAX_ACCEL = 41.065033847087705;
+    public static double MAX_ANG_VEL = 3.009366035461426;
+    public static double MAX_ANG_ACCEL = 2.832071299799152;
 
 
     public static double encoderTicksToInches(double ticks) {
@@ -109,4 +107,6 @@ public class DriveConstants {
       // see https://docs.google.com/document/d/1tyWrXDfMidwYyP_5H4mZyVgaEswhOC35gvdmP-V-5hA/edit#heading=h.61g9ixenznbx
       return 32767 / ticksPerSecond;
     }
+    public static RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIR = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+    public static RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIR = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 }

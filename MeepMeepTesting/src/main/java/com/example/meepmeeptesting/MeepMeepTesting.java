@@ -25,7 +25,7 @@ public class MeepMeepTesting {
                 // Option: Set theme. Default = ColorSchemeRedDark()
                 .setColorScheme(new ColorSchemeRedDark())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(270)))
+                        drive.trajectorySequenceBuilder(new Pose2d(12, -61, Math.toRadians(90)))
                                 .forward(30)
                                 .turn(Math.toRadians(90))
                                 .forward(30)
