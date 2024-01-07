@@ -21,6 +21,7 @@ public class RobotDrive extends LinearOpMode {
     protected Servo arm2_servo;
     protected Servo hand_servo;
     protected Servo drone_servo;
+    protected Servo dronestop_servo;
     protected ElapsedTime runtime = new ElapsedTime();
 
     @Override
@@ -39,6 +40,7 @@ public class RobotDrive extends LinearOpMode {
         arm2_servo = hardwareMap.get(Servo.class, "arm2_servo");
         hand_servo = hardwareMap.get(Servo.class, "hand_servo");
         drone_servo = hardwareMap.get(Servo.class, "drone_servo");
+        dronestop_servo = hardwareMap.get(Servo.class, "dronestop");
 
         // Reverse motors - this works our motors are kind of weird, you shouldn't worry about it. moving works fine now, it didn't before
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -125,16 +127,16 @@ public class RobotDrive extends LinearOpMode {
                         right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                         isMainArmDirectionForward = -1;
                     } else if(gamepad1.dpad_left) {
-                left_arm.setDirection(DcMotor.Direction.FORWARD);
-                right_arm.setDirection(DcMotor.Direction.REVERSE);
-                left_arm.setTargetPosition(0);
-                right_arm.setTargetPosition(0);
-                left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                left_arm.setPower(0.75);
-                right_arm.setPower(0.75);
-                while (opModeIsActive() && left_arm.isBusy()) {
-                }
+                        left_arm.setDirection(DcMotor.Direction.FORWARD);
+                        right_arm.setDirection(DcMotor.Direction.REVERSE);
+                        left_arm.setTargetPosition(0);
+                        right_arm.setTargetPosition(0);
+                        left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        left_arm.setPower(0.75);
+                        right_arm.setPower(0.75);
+                        while (opModeIsActive() && left_arm.isBusy()) {
+                    }
                 left_arm.setPower(0);
                 right_arm.setPower(0);
                 sleep(600);
@@ -142,16 +144,22 @@ public class RobotDrive extends LinearOpMode {
                 right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 isMainArmDirectionForward = 1;
             }
+
             //DRONE LAUNCH
             if (gamepad1.dpad_up) {
+                // issue 14: raise the drone stopper
+                dronestop_servo.setPosition(-1);
+                // release the drone
                 drone_servo.setPosition(-1);
-            }
-            // resets drone position, otherwise it wont move
-            else if (gamepad1.dpad_down) {
+                sleep(600);
+                // issue 15: Make sure drone servo resets after shooting #15
                 drone_servo.setPosition(1);
             }
-
-
+            // resets drone position, otherwise it wont move
+            if (gamepad1.dpad_down) {
+                drone_servo.setPosition(1);
+                dronestop_servo.setPosition(1);
+            }
 
             // OPEN/CLOSE CLAW
             if (gamepad1.right_bumper) {
@@ -173,22 +181,22 @@ public class RobotDrive extends LinearOpMode {
             // another big arm test, copied from old code. both going up and down work
             if (gamepad1.a) {
                 if(isMainArmDirectionForward == 1) {
-                left_arm.setDirection(DcMotor.Direction.REVERSE);
-                right_arm.setDirection(DcMotor.Direction.FORWARD);
-                left_arm.setTargetPosition(-360);
-                right_arm.setTargetPosition(-360);
-                left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                left_arm.setPower(0.6);
-                right_arm.setPower(0.6);
-                while (opModeIsActive() && left_arm.isBusy()) {
-                }
-                left_arm.setPower(0);
-                right_arm.setPower(0);
-                sleep(600);
-                left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                isMainArmDirectionForward = 0;
+                    left_arm.setDirection(DcMotor.Direction.REVERSE);
+                    right_arm.setDirection(DcMotor.Direction.FORWARD);
+                    left_arm.setTargetPosition(-360);
+                    right_arm.setTargetPosition(-360);
+                    left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    left_arm.setPower(0.6);
+                    right_arm.setPower(0.6);
+                    while (opModeIsActive() && left_arm.isBusy()) {
+                    }
+                    left_arm.setPower(0);
+                    right_arm.setPower(0);
+                    sleep(600);
+                    left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    isMainArmDirectionForward = 0;
                 }
                 else {
                     left_arm.setDirection(DcMotor.Direction.FORWARD);
@@ -207,7 +215,7 @@ public class RobotDrive extends LinearOpMode {
                     left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     isMainArmDirectionForward = 1;
-                    }
+                }
             }
 
 
