@@ -34,7 +34,7 @@ import org.firstinspires.ftc.teamcode.drive.RobotDrive;
 
 @Config
 @Autonomous(group = "AWD")
-public class RobotDrive1 extends LinearOpMode {
+public class bluemiddle extends LinearOpMode {
     private VisionPortal visionPortal;
     private PropProcessor propProcessor;
     protected Servo arm2_servo;
@@ -61,14 +61,14 @@ public class RobotDrive1 extends LinearOpMode {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        Pose2d startPose = new Pose2d(12,-61 , Math.toRadians(270));
+        Pose2d startPose = new Pose2d(12,61 , Math.toRadians(90));
 
         drive.setPoseEstimate(startPose);
         TrajectorySequence MIDDLE = drive.trajectorySequenceBuilder(startPose)
-                // push team prop
-                .lineToLinearHeading(new Pose2d(12,-23, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(12,23, Math.toRadians(270)))
+
                 // move back
-                .lineToLinearHeading(new Pose2d(12,-35, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(12,35, Math.toRadians(270)))
                 //wait for lower arm
                 .waitSeconds(1)
                 //open claw distance required
@@ -77,10 +77,10 @@ public class RobotDrive1 extends LinearOpMode {
                 .back(2)
                 .waitSeconds(0.3)
                 .back(3)
-                .splineToSplineHeading(new Pose2d(47, -37, Math.toRadians(180)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(47, 37, Math.toRadians(180)), Math.toRadians(0))
                 .waitSeconds(10)
-                .strafeLeft(24)
-                .back(13)
+                .strafeRight(22)
+                .back(12)
                 .waitSeconds(30)
                 // lower arm 2
                 .addDisplacementMarker(48, () -> {
@@ -94,6 +94,7 @@ public class RobotDrive1 extends LinearOpMode {
                 // close claw, raise arm 2
                 .addDisplacementMarker(51,() -> {
                     hand_servo.setPosition(0.5);
+
                 })
                 .addDisplacementMarker(53, () -> {
                     arm2_servo.setPosition(1);
@@ -114,12 +115,14 @@ public class RobotDrive1 extends LinearOpMode {
                     right_arm.setPower(0);
                     left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    arm2_servo.setPosition(0.8);
                 })
 
 
                 // open claw
                 .addTemporalMarker(12.7, () -> {
                     hand_servo.setPosition(0.2);
+
                 })
                 // lower arm and claw
                 .addTemporalMarker(15, () -> {
@@ -137,6 +140,7 @@ public class RobotDrive1 extends LinearOpMode {
                     right_arm.setPower(0);
                     left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    arm2_servo.setPosition(1);
                 })
                 .build();
         propProcessor = new PropProcessor();
@@ -161,7 +165,7 @@ public class RobotDrive1 extends LinearOpMode {
             telemetry.update();
 
         }
-                waitForStart();
+        waitForStart();
 
         if (isStopRequested()) return;
 

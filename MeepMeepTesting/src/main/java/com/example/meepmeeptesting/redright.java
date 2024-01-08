@@ -1,4 +1,10 @@
 package com.example.meepmeeptesting;
+
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.noahbres.meepmeep.MeepMeep;
+import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeRedDark;
+import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
+import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
@@ -11,10 +17,7 @@ import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeRedDark;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
-
-
-
-public class MeepMeepTesting {
+public class redright {
     public static void main(String[] args) {
         // Declare a MeepMeep instance
         // With a field size of 800 pixels
@@ -24,52 +27,38 @@ public class MeepMeepTesting {
                 // Required: Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(41.065033847087705, 41.065033847087705, 3.009366035461426, 2.832071299799152, 13.3)
                 // Option: Set theme. Default = ColorSchemeRedDark()
-                //11.5
-                //31
-                //14
                 .setColorScheme(new ColorSchemeRedDark())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, -61, Math.toRadians(270)))
-                                .strafeLeft(11.5)
-                                .lineToLinearHeading(new Pose2d(23.5 ,-30, Math.toRadians(90)))
-                                .lineToLinearHeading(new Pose2d(23.5,-40, Math.toRadians(90)))
-                                .waitSeconds(1)
+                        drive.trajectorySequenceBuilder(new Pose2d(-36, -61, Math.toRadians(270)))
+                                .strafeRight(5)
+                                .lineToLinearHeading(new Pose2d(-36,-36, Math.toRadians(0)))
+                                // move back
+                                .lineToLinearHeading(new Pose2d(-36,-35, Math.toRadians(0)))
+                                //wait for lower arm
+                                .waitSeconds(2)
+                                //open claw distance required
                                 .back(1)
                                 .waitSeconds(0.5)
                                 .back(2)
                                 .waitSeconds(0.3)
                                 .back(3)
-                                .splineToSplineHeading(new Pose2d(47, -42, Math.toRadians(180)), Math.toRadians(0))
-                                .waitSeconds(10)
-                                .strafeLeft(19)
-                                .back(14)
-                                .waitSeconds(30)
+                                .strafeLeft(7)
+                                .lineToLinearHeading(new Pose2d(-36,-12, Math.toRadians(180)))
+                                .lineToLinearHeading(new Pose2d(61,-12, Math.toRadians(180)))
 
-                                // move back
                                 // lower arm 2
-                                .addDisplacementMarker(49, () -> {
+                                .addDisplacementMarker(31, () -> {
                                 })
                                 // open claw
-                                .addDisplacementMarker(53, () -> {
+                                .addDisplacementMarker(31, () -> {
 
                                 })
                                 // close claw, raise arm 2
-                                .addDisplacementMarker(56,() -> {
+                                .addDisplacementMarker(33,() -> {
                                 })
-                                .addDisplacementMarker(58, () -> {
+                                .addDisplacementMarker(35, () -> {
                                 })
                                 // raise big arm to backdrop
-                                .addTemporalMarker(10.4, () -> {
-
-                                })
-
-
-                                // open claw
-                                .addTemporalMarker(12.7, () -> {
-                                })
-                                // lower arm and claw
-                                .addTemporalMarker(15, () -> {
-                                })
                                 .build()
                 );
 
@@ -77,8 +66,9 @@ public class MeepMeepTesting {
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)
                 // Background opacity from 0-1
-                .setBackgroundAlpha(0.95f)
+                .setBackgroundAlpha(1f)
                 .addEntity(myBot)
                 .start();
     }
 }
+

@@ -107,40 +107,7 @@ public class RobotDrive extends LinearOpMode {
 
             // you can ignore this, this kind of was a test to see if we could put stuff onto the backdrop from the front
             if (gamepad1.dpad_right) {
-                    arm2_servo.setPosition(0.5);
-                        left_arm.setDirection(DcMotor.Direction.REVERSE);
-                        right_arm.setDirection(DcMotor.Direction.FORWARD);
-                        left_arm.setTargetPosition(-70);
-                        right_arm.setTargetPosition(-70);
-                        left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        left_arm.setPower(0.75);
-                        right_arm.setPower(0.75);
-                        while (opModeIsActive() && left_arm.isBusy()) {
-                        }
-                        left_arm.setPower(0);
-                        right_arm.setPower(0);
-                        sleep(600);
-                        left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                        right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                        isMainArmDirectionForward = -1;
-                    } else if(gamepad1.dpad_left) {
-                left_arm.setDirection(DcMotor.Direction.FORWARD);
-                right_arm.setDirection(DcMotor.Direction.REVERSE);
-                left_arm.setTargetPosition(0);
-                right_arm.setTargetPosition(0);
-                left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                left_arm.setPower(0.75);
-                right_arm.setPower(0.75);
-                while (opModeIsActive() && left_arm.isBusy()) {
-                }
-                left_arm.setPower(0);
-                right_arm.setPower(0);
-                sleep(600);
-                left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                isMainArmDirectionForward = 1;
+                    arm2_servo.setPosition(0.8);
             }
             //DRONE LAUNCH
             if (gamepad1.dpad_up) {
