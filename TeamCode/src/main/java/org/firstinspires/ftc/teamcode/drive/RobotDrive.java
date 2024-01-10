@@ -50,6 +50,8 @@ public class RobotDrive extends LinearOpMode {
         right_arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left_arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right_arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        arm2_servo.setDirection(Servo.Direction.FORWARD);
+        arm2_servo.scaleRange(0,0);
         arm2_servo.setPosition(1);
         hand_servo.setPosition(0.2);
 
@@ -203,6 +205,9 @@ public class RobotDrive extends LinearOpMode {
 
             telemetry.addData("larm direction", left_arm.getDirection());
             telemetry.addData("rarm direction", right_arm.getDirection());
+
+            telemetry.addData("arm2", arm2_servo.getDirection());
+
 
             telemetry.update();
 

@@ -1,23 +1,17 @@
 package com.example.meepmeeptesting;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.noahbres.meepmeep.MeepMeep;
-import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeRedDark;
-import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
-import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-
-import com.acmerobotics.roadrunner.drive.Drive;;
+;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeRedDark;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
-public class redright {
+
+
+
+public class redleftclosetobackdrop {
     public static void main(String[] args) {
         // Declare a MeepMeep instance
         // With a field size of 800 pixels
@@ -27,13 +21,16 @@ public class redright {
                 // Required: Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(41.065033847087705, 41.065033847087705, 3.009366035461426, 2.832071299799152, 13.3)
                 // Option: Set theme. Default = ColorSchemeRedDark()
+                //11.5
+                //31
+                //14
                 .setColorScheme(new ColorSchemeRedDark())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-36, -61, Math.toRadians(270)))
-                                .strafeRight(5)
-                                .lineToLinearHeading(new Pose2d(-36,-36, Math.toRadians(0)))
+                        drive.trajectorySequenceBuilder(new Pose2d(12, -61, Math.toRadians(270)))
+                                .strafeLeft(5)
+                                .lineToLinearHeading(new Pose2d(12,-36, Math.toRadians(180)))
                                 // move back
-                                .lineToLinearHeading(new Pose2d(-36,-35, Math.toRadians(0)))
+                                .lineToLinearHeading(new Pose2d(12,-35, Math.toRadians(180)))
                                 //wait for lower arm
                                 .waitSeconds(2)
                                 //open claw distance required
@@ -42,9 +39,12 @@ public class redright {
                                 .back(2)
                                 .waitSeconds(0.3)
                                 .back(3)
-                                .strafeLeft(7)
-                                .lineToLinearHeading(new Pose2d(-36,-12, Math.toRadians(180)))
-                                .lineToLinearHeading(new Pose2d(61,-12, Math.toRadians(180)))
+                                .lineToLinearHeading(new Pose2d(47,-29, Math.toRadians(180)))
+                                .waitSeconds(5)
+                                .strafeLeft(30)
+                                .back(13)
+                                .waitSeconds(30)
+
 
                                 // lower arm 2
                                 .addDisplacementMarker(31, () -> {
@@ -66,9 +66,8 @@ public class redright {
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)
                 // Background opacity from 0-1
-                .setBackgroundAlpha(1f)
+                .setBackgroundAlpha(0.95f)
                 .addEntity(myBot)
                 .start();
     }
 }
-

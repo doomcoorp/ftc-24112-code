@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -31,6 +32,8 @@ import org.firstinspires.ftc.teamcode.drive.RobotDrive;
  * If you are using SampleTankDrive, you should be tuning AXIAL_PID, CROSS_TRACK_PID, and HEADING_PID.
  * These coefficients can be tuned live in dashboard.
  */
+@Disabled
+
 
 @Config
 @Autonomous(group = "AWD")
@@ -57,7 +60,6 @@ public class bluemiddle extends LinearOpMode {
         right_arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_arm.setDirection(DcMotor.Direction.REVERSE);
         right_arm.setDirection(DcMotor.Direction.FORWARD);
-
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
@@ -148,13 +150,15 @@ public class bluemiddle extends LinearOpMode {
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .addProcessor(propProcessor)
                 .build();
+        arm2_servo.scaleRange(0.0,0.1);
+        hand_servo.scaleRange(0,0.1);
         arm2_servo.setPosition(0);
         hand_servo.setPosition(0.2);
-        sleep(3000);
+        sleep(1000);
         hand_servo.setPosition(0.5);
         sleep(500);
         arm2_servo.setPosition(0.9);
-
+        arm2_servo.setDirection(Servo.Direction.REVERSE);
         while(!isStarted()) {
             telemetry.addData("arm pos", arm2_servo.getPosition());
             telemetry.addData("claw pos", hand_servo.getPosition());
@@ -162,9 +166,13 @@ public class bluemiddle extends LinearOpMode {
             telemetry.addData("Left Saturation", propProcessor.getsatRectLeft());
             telemetry.addData("Right Saturation", propProcessor.getsatRectRight());
             telemetry.addData("Middle saturation", propProcessor.getsatRectMiddle());
-            telemetry.update();
+            telemetry.addData("arm2 servo dir", arm2_servo.getDirection());
+            telemetry.addData("Middle sdadwdwDWAQDWQDW  QDW QD  Q   DQ  DQ  D   QDQD    D   QQ  DQD aturation", propProcessor.getsatRectMiddle());
 
+
+            telemetry.update();
         }
+
         waitForStart();
 
         if (isStopRequested()) return;

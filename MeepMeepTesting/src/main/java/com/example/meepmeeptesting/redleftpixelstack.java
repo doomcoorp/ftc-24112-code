@@ -14,7 +14,7 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 
 
-public class redleft {
+public class redleftpixelstack {
     public static void main(String[] args) {
         // Declare a MeepMeep instance
         // With a field size of 800 pixels
