@@ -8,7 +8,7 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 ;
 
-public class redmiddlepixelstack {
+public class redmiddleclosetobackdrop {
     public static void main(String[] args) {
             // Declare a MeepMeep instance
             // With a field size of 800 pixels
@@ -20,11 +20,12 @@ public class redmiddlepixelstack {
                     // Option: Set theme. Default = ColorSchemeRedDark()
                     .setColorScheme(new ColorSchemeRedDark())
                     .followTrajectorySequence(drive ->
-                            drive.trajectorySequenceBuilder(new Pose2d(-36, -61, Math.toRadians(270)))
-                                    .lineToLinearHeading(new Pose2d(-36,-23, Math.toRadians(270)))
+                            drive.trajectorySequenceBuilder(new Pose2d(12, -61, Math.toRadians(270)))
+                                    .lineToLinearHeading(new Pose2d(12,-23, Math.toRadians(270)))
+                                    .strafeLeft(5)
+
                                     // move back
-                                    .strafeRight(5)
-                                    .lineToLinearHeading(new Pose2d(-36,-35, Math.toRadians(90)))
+                                    .lineToLinearHeading(new Pose2d(12,-35, Math.toRadians(90)))
                                     //wait for lower arm
                                     .waitSeconds(1)
                                     //open claw distance required
@@ -33,15 +34,11 @@ public class redmiddlepixelstack {
                                     .back(2)
                                     .waitSeconds(0.3)
                                     .back(3)
-                                    .strafeLeft(5)
-                                    .lineToLinearHeading(new Pose2d(-36,-12, Math.toRadians(180)))
-                                    .lineToLinearHeading(new Pose2d(40,-12, Math.toRadians(180)))
-                                    .lineToLinearHeading(new Pose2d(47,-37, Math.toRadians(180)))
+                                    .splineToSplineHeading(new Pose2d(47, -37, Math.toRadians(180)), Math.toRadians(0))
                                     .waitSeconds(5)
                                     .strafeLeft(24)
                                     .back(13)
-
-
+                                    .waitSeconds(30)
                                     // lower arm 2
                                     .addDisplacementMarker(53, () -> {
                                     })
@@ -55,6 +52,19 @@ public class redmiddlepixelstack {
                                     .addDisplacementMarker(58, () -> {
                                     })
                                     // raise big arm to backdrop
+                                    .addTemporalMarker(10.4, () -> {
+
+
+                                    })
+
+
+                                    // open claw
+                                    .addTemporalMarker(12.7, () -> {
+                                    })
+                                    // lower arm and claw
+                                    .addTemporalMarker(15, () -> {
+
+                                    })
                                     .build()
                     );
 

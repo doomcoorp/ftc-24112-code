@@ -35,7 +35,13 @@ public class redrightpixelstack {
                                 .back(3)
                                 .strafeLeft(7)
                                 .lineToLinearHeading(new Pose2d(-36,-12, Math.toRadians(180)))
-                                .lineToLinearHeading(new Pose2d(61,-12, Math.toRadians(180)))
+                                .lineToLinearHeading(new Pose2d(40,-12, Math.toRadians(180)))
+                                .lineToLinearHeading(new Pose2d(47,-41, Math.toRadians(180)))
+                                .waitSeconds(5)
+                                .strafeLeft(18)
+                                .back(13)
+                                .waitSeconds(30)
+
 
                                 // lower arm 2
                                 .addDisplacementMarker(31, () -> {

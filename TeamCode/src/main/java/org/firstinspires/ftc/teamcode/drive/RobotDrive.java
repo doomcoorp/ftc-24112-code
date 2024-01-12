@@ -51,7 +51,6 @@ public class RobotDrive extends LinearOpMode {
         left_arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right_arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm2_servo.setDirection(Servo.Direction.FORWARD);
-        arm2_servo.scaleRange(0,0);
         arm2_servo.setPosition(1);
         hand_servo.setPosition(0.2);
 

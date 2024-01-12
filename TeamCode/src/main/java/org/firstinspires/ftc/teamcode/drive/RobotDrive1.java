@@ -34,7 +34,7 @@ import org.firstinspires.ftc.teamcode.drive.RobotDrive;
  */
 
 @Config
-@Autonomous(group = "AWD")
+@Autonomous(group = "AWD",name = "redautonearbackdrop")
 public class RobotDrive1 extends LinearOpMode {
     private VisionPortal visionPortal;
     private PropProcessor propProcessor;
@@ -108,8 +108,9 @@ public class RobotDrive1 extends LinearOpMode {
                 })
                 .build();
         TrajectorySequence MIDDLE = drive.trajectorySequenceBuilder(startPose)
-                // push team prop
                 .lineToLinearHeading(new Pose2d(12,-23, Math.toRadians(270)))
+                .strafeLeft(5)
+
                 // move back
                 .lineToLinearHeading(new Pose2d(12,-35, Math.toRadians(90)))
                 //wait for lower arm
@@ -120,68 +121,75 @@ public class RobotDrive1 extends LinearOpMode {
                 .back(2)
                 .waitSeconds(0.3)
                 .back(3)
-                .splineToSplineHeading(new Pose2d(47, -37, Math.toRadians(180)), Math.toRadians(0))
-                .waitSeconds(5)
-                .strafeLeft(24)
-                .back(13)
+                .splineToSplineHeading(new Pose2d(47, -35, Math.toRadians(180)), Math.toRadians(0))
+                .waitSeconds(7)
+                .lineToLinearHeading(new Pose2d(47,-61, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(60,-61, Math.toRadians(180)))
                 .waitSeconds(30)
                 // lower arm 2
-                .addDisplacementMarker(48, () -> {
+                .addDisplacementMarker(53, () -> {
                     arm2_servo.setPosition(0);
-                })
-                // open claw
-                .addDisplacementMarker(50, () -> {
-                    hand_servo.setPosition(0.2);
 
                 })
-                // close claw, raise arm 2
-                .addDisplacementMarker(51,() -> {
-                    hand_servo.setPosition(0.5);
+                // open claw
+                .addDisplacementMarker(56, () -> {
+                    hand_servo.setPosition(0.2);
                 })
-                .addDisplacementMarker(53, () -> {
+                // close claw, raise arm 2
+                .addDisplacementMarker(57,() -> {
+                    hand_servo.setPosition(0.5);
+
+                })
+                .addDisplacementMarker(58, () -> {
                     arm2_servo.setPosition(1);
+
                 })
                 // raise big arm to backdrop
                 .addTemporalMarker(10.4, () -> {
                     left_arm.setDirection(DcMotor.Direction.REVERSE);
                     right_arm.setDirection(DcMotor.Direction.FORWARD);
-                    left_arm.setTargetPosition(-540);
-                    right_arm.setTargetPosition(-540);
+                    left_arm.setTargetPosition(-500);
+                    right_arm.setTargetPosition(-500);
                     left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    left_arm.setPower(0.8);
-                    right_arm.setPower(0.8);
+                    left_arm.setPower(0.9);
+                    right_arm.setPower(0.9);
                     while (opModeIsActive() && left_arm.isBusy()) {
                     }
                     left_arm.setPower(0);
                     right_arm.setPower(0);
                     left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    arm2_servo.setPosition(0.6);
                 })
-
-
-                // open claw
-                .addTemporalMarker(12.7, () -> {
+                .addTemporalMarker(11, () -> {
                     hand_servo.setPosition(0.2);
+
                 })
+                .addTemporalMarker(11.5, () -> {
+                    arm2_servo.setPosition(1);
+        })
                 // lower arm and claw
-                .addTemporalMarker(15, () -> {
+                .addTemporalMarker(12, () -> {
                     left_arm.setDirection(DcMotor.Direction.FORWARD);
                     right_arm.setDirection(DcMotor.Direction.REVERSE);
                     left_arm.setTargetPosition(0);
                     right_arm.setTargetPosition(0);
                     left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    left_arm.setPower(0.8);
-                    right_arm.setPower(0.8);
+                    left_arm.setPower(0.9);
+                    right_arm.setPower(0.9);
                     while (opModeIsActive() && left_arm.isBusy()) {
                     }
                     left_arm.setPower(0);
                     right_arm.setPower(0);
                     left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    arm2_servo.setPosition(1);
                 })
+
                 .build();
+
         TrajectorySequence LEFT = drive.trajectorySequenceBuilder(startPose)
                 .strafeLeft(5)
                 .lineToLinearHeading(new Pose2d(12,-36, Math.toRadians(180)))
@@ -221,14 +229,15 @@ public class RobotDrive1 extends LinearOpMode {
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .addProcessor(propProcessor)
                 .build();
-        arm2_servo.setPosition(0);
-        hand_servo.setPosition(0.2);
-        sleep(3000);
-        hand_servo.setPosition(0.5);
-        sleep(500);
-        arm2_servo.setPosition(1);
 
         while(!isStarted()) {
+            if (gamepad1.right_bumper) {
+                hand_servo.setPosition(0.2);
+            }
+
+            if (gamepad1.left_bumper) {
+                hand_servo.setPosition(0.5);
+            }
             telemetry.addData("arm pos", arm2_servo.getPosition());
             telemetry.addData("claw pos", hand_servo.getPosition());
             telemetry.addData("Currently Recorded Position", propProcessor.getSelected());
