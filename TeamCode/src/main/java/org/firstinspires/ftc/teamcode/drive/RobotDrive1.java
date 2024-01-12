@@ -66,45 +66,84 @@ public class RobotDrive1 extends LinearOpMode {
 
         drive.setPoseEstimate(startPose);
         TrajectorySequence RIGHT = drive.trajectorySequenceBuilder(startPose)
-                .strafeLeft(5)
-                .lineToLinearHeading(new Pose2d(12,-36, Math.toRadians(0)))
-                // move back
-                .lineToLinearHeading(new Pose2d(12,-35, Math.toRadians(0)))
-                //wait for lower arm
-                .waitSeconds(2)
-                //open claw distance required
+                .strafeLeft(11.5)
+                .lineToLinearHeading(new Pose2d(24 ,-30, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(24,-40, Math.toRadians(90)))
+                .waitSeconds(1)
                 .back(1)
                 .waitSeconds(0.5)
                 .back(2)
                 .waitSeconds(0.3)
                 .back(3)
-                .lineToLinearHeading(new Pose2d(47,-41, Math.toRadians(180)))
-                .waitSeconds(5)
-                .strafeLeft(18)
-                .back(13)
+                .lineToLinearHeading(new Pose2d(51,-41.5, Math.toRadians(180)))
+                .waitSeconds(4)
+                .lineToLinearHeading(new Pose2d(51,-61, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(60,-61, Math.toRadians(180)))
                 .waitSeconds(30)
+
+                // move back
                 // lower arm 2
-                .addDisplacementMarker(31, () -> {
+                .addDisplacementMarker(49, () -> {
                     arm2_servo.setPosition(0);
+
                 })
                 // open claw
-                .addDisplacementMarker(31, () -> {
+                .addDisplacementMarker(53, () -> {
                     hand_servo.setPosition(0.2);
+
+
                 })
                 // close claw, raise arm 2
-                .addDisplacementMarker(33,() -> {
+                .addDisplacementMarker(54,() -> {
                     hand_servo.setPosition(0.5);
+
+
                 })
-                .addDisplacementMarker(35, () -> {
+                .addDisplacementMarker(58, () -> {
+                    arm2_servo.setPosition(1);
+
+                })
+                .addTemporalMarker(10, () -> {
+                    left_arm.setDirection(DcMotor.Direction.REVERSE);
+                    right_arm.setDirection(DcMotor.Direction.FORWARD);
+                    left_arm.setTargetPosition(-560);
+                    right_arm.setTargetPosition(-560);
+                    left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    left_arm.setPower(1);
+                    right_arm.setPower(1);
+                    while (opModeIsActive() && left_arm.isBusy()) {
+                    }
+                    left_arm.setPower(0);
+                    right_arm.setPower(0);
+                    left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    arm2_servo.setPosition(0.4);
+                })
+                .addTemporalMarker(10.6, () -> {
+                    hand_servo.setPosition(0.2);
+
+                })
+                .addTemporalMarker(11, () -> {
                     arm2_servo.setPosition(1);
                 })
-                .addTemporalMarker(9, () -> {
-                })
-
-                .addTemporalMarker(11, () -> {
-                })
                 // lower arm and claw
-                .addTemporalMarker(15, () -> {
+                .addTemporalMarker(11.1, () -> {
+                    left_arm.setDirection(DcMotor.Direction.FORWARD);
+                    right_arm.setDirection(DcMotor.Direction.REVERSE);
+                    left_arm.setTargetPosition(0);
+                    right_arm.setTargetPosition(0);
+                    left_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    right_arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    left_arm.setPower(1);
+                    right_arm.setPower(1);
+                    while (opModeIsActive() && left_arm.isBusy()) {
+                    }
+                    left_arm.setPower(0);
+                    right_arm.setPower(0);
+                    left_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    right_arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    arm2_servo.setPosition(1);
                 })
                 .build();
         TrajectorySequence MIDDLE = drive.trajectorySequenceBuilder(startPose)
@@ -202,9 +241,9 @@ public class RobotDrive1 extends LinearOpMode {
                 .back(2)
                 .waitSeconds(0.3)
                 .back(3)
-                .lineToLinearHeading(new Pose2d(49.5,-24.5, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(51,-26, Math.toRadians(180)))
                 .waitSeconds(4)
-                .lineToLinearHeading(new Pose2d(49.5,-61, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(51,-61, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(60,-61, Math.toRadians(180)))
                 .waitSeconds(30)
 
