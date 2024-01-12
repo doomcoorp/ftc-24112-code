@@ -28,8 +28,8 @@ import org.firstinspires.ftc.vision.VisionPortal;
  */
 
 @Config
-@Autonomous(group = "AWD",name = "blueauto")
-public class bluemiddle extends LinearOpMode {
+@Autonomous(group = "AWD",name = "blueauto2")
+public class blueauto extends LinearOpMode {
     private VisionPortal visionPortal;
     private PropProcessor propProcessor;
     protected Servo arm2_servo;
