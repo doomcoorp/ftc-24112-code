@@ -385,7 +385,8 @@ public class RobotDrive2 extends LinearOpMode {
                 case MIDDLE:
                     telemetry.addLine("Running trajectory MIDDLE");
                     telemetry.update();
-                    drive.followTrajectorySequence(MIDDLE);
+                    drive.turn(Math.toRadians(90));
+                    sleep(100000000);
                     break;
                 case LEFT:
                     telemetry.addLine("Running trajectory LEFT");
