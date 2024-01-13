@@ -1,55 +1,46 @@
 package com.example.meepmeeptesting;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-
-import com.acmerobotics.roadrunner.drive.Drive;;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeRedDark;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
-
-
-public class MeepMeepTesting {
+public class bluemiddle {
     public static void main(String[] args) {
         // Declare a MeepMeep instance
         // With a field size of 800 pixels
-        MeepMeep meepMeep = new MeepMeep(900);
+        MeepMeep meepMeep = new MeepMeep(800);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Required: Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(41.065033847087705, 41.065033847087705, 3.009366035461426, 2.832071299799152, 13.3)
+                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 13.3)
                 // Option: Set theme. Default = ColorSchemeRedDark()
-                //11.5
-                //31
-                //14
                 .setColorScheme(new ColorSchemeRedDark())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, -61, Math.toRadians(270)))
-                                .strafeLeft(11.5)
-                                .lineToLinearHeading(new Pose2d(24 ,-30, Math.toRadians(90)))
-                                .lineToLinearHeading(new Pose2d(24,-40, Math.toRadians(90)))
+                        drive.trajectorySequenceBuilder(new Pose2d(12, 61, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(12,23, Math.toRadians(90)))
+                                // move back
+                                .strafeRight(5)
+                                .lineToLinearHeading(new Pose2d(12,35, Math.toRadians(270)))
+                                //wait for lower arm
                                 .waitSeconds(1)
+                                //open claw distance required
                                 .back(1)
                                 .waitSeconds(0.5)
                                 .back(2)
                                 .waitSeconds(0.3)
                                 .back(3)
-                                .lineToLinearHeading(new Pose2d(51,-41.5, Math.toRadians(180)))
-                                .waitSeconds(4)
-                                .lineToLinearHeading(new Pose2d(51,-61, Math.toRadians(180)))
-                                .lineToLinearHeading(new Pose2d(60,-61, Math.toRadians(180)))
+                                .splineToSplineHeading(new Pose2d(47, 35, Math.toRadians(180)), Math.toRadians(0))
+                                .waitSeconds(10)
+                                .strafeRight(24)
+                                .back(13)
                                 .waitSeconds(30)
-                                // move back
                                 // lower arm 2
-                                .addDisplacementMarker(49, () -> {
+                                .addDisplacementMarker(53, () -> {
                                 })
                                 // open claw
-                                .addDisplacementMarker(53, () -> {
+                                .addDisplacementMarker(55, () -> {
 
                                 })
                                 // close claw, raise arm 2
@@ -81,3 +72,4 @@ public class MeepMeepTesting {
                 .start();
     }
 }
+

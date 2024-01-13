@@ -1,20 +1,15 @@
 package com.example.meepmeeptesting;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-
-import com.acmerobotics.roadrunner.drive.Drive;;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeRedDark;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
+;
 
 
-public class MeepMeepTesting {
+public class redleftpixelstack1 {
     public static void main(String[] args) {
         // Declare a MeepMeep instance
         // With a field size of 800 pixels
@@ -31,19 +26,20 @@ public class MeepMeepTesting {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(12, -61, Math.toRadians(270)))
                                 .strafeLeft(11.5)
-                                .lineToLinearHeading(new Pose2d(24 ,-30, Math.toRadians(90)))
-                                .lineToLinearHeading(new Pose2d(24,-40, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(23.5 ,-30, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(23.5,-40, Math.toRadians(90)))
                                 .waitSeconds(1)
                                 .back(1)
                                 .waitSeconds(0.5)
                                 .back(2)
                                 .waitSeconds(0.3)
                                 .back(3)
-                                .lineToLinearHeading(new Pose2d(51,-41.5, Math.toRadians(180)))
+                                .lineToLinearHeading(new Pose2d(46,-41.5, Math.toRadians(180)))
                                 .waitSeconds(4)
-                                .lineToLinearHeading(new Pose2d(51,-61, Math.toRadians(180)))
+                                .lineToLinearHeading(new Pose2d(46,-61, Math.toRadians(180)))
                                 .lineToLinearHeading(new Pose2d(60,-61, Math.toRadians(180)))
                                 .waitSeconds(30)
+
                                 // move back
                                 // lower arm 2
                                 .addDisplacementMarker(49, () -> {
@@ -56,18 +52,6 @@ public class MeepMeepTesting {
                                 .addDisplacementMarker(56,() -> {
                                 })
                                 .addDisplacementMarker(58, () -> {
-                                })
-                                // raise big arm to backdrop
-                                .addTemporalMarker(10.4, () -> {
-
-                                })
-
-
-                                // open claw
-                                .addTemporalMarker(12.7, () -> {
-                                })
-                                // lower arm and claw
-                                .addTemporalMarker(15, () -> {
                                 })
                                 .build()
                 );

@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode.drive.tuningOpmodes;
         import com.acmerobotics.dashboard.config.Config;
         import com.acmerobotics.roadrunner.geometry.Pose2d;
         import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
+        import com.qualcomm.robotcore.eventloop.opmode.Disabled;
         import com.qualcomm.robotcore.hardware.DcMotorEx;
         import com.qualcomm.robotcore.hardware.HardwareMap;
         import org.firstinspires.ftc.teamcode.util.Encoder;
@@ -25,6 +26,8 @@ package org.firstinspires.ftc.teamcode.drive.tuningOpmodes;
  *    \--------------/
  *
  */
+@Disabled
+
 @Config
 public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer {
     public static double TICKS_PER_REV = 312.6;
