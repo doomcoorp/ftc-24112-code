@@ -46,7 +46,7 @@ public class RobotDrive2 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        arm2_servo = hardwareMap.get(Servo .class, "arm2_servo");
+        arm2_servo = hardwareMap.get(Servo.class, "arm2_servo");
         hand_servo = hardwareMap.get(Servo.class, "hand_servo");
         DcMotor right_arm = hardwareMap.dcMotor.get("right_arm");
         DcMotor left_arm = hardwareMap.dcMotor.get("left_arm");
@@ -68,26 +68,25 @@ public class RobotDrive2 extends LinearOpMode {
         imu.initialize(parameters);
 
 
-
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        Pose2d startPose = new Pose2d(-36,-61 , Math.toRadians(270));
+        Pose2d startPose = new Pose2d(-36, -61, Math.toRadians(270));
 
         drive.setPoseEstimate(startPose);
         TrajectorySequence RIGHT = drive.trajectorySequenceBuilder(startPose)
                 .strafeLeft(11.5)
-                .lineToLinearHeading(new Pose2d(24 ,-30, Math.toRadians(90)))
-                .lineToLinearHeading(new Pose2d(24,-40, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(24, -30, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(24, -40, Math.toRadians(90)))
                 .waitSeconds(1)
                 .back(1)
                 .waitSeconds(0.5)
                 .back(2)
                 .waitSeconds(0.3)
                 .back(3)
-                .lineToLinearHeading(new Pose2d(51,-41.5, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(51, -41.5, Math.toRadians(180)))
                 .waitSeconds(4)
-                .lineToLinearHeading(new Pose2d(51,-61, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(60,-61, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(51, -61, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(60, -61, Math.toRadians(180)))
                 .waitSeconds(30)
 
                 // move back
@@ -103,7 +102,7 @@ public class RobotDrive2 extends LinearOpMode {
 
                 })
                 // close claw, raise arm 2
-                .addDisplacementMarker(54,() -> {
+                .addDisplacementMarker(54, () -> {
                     hand_servo.setPosition(0.5);
 
 
@@ -155,29 +154,31 @@ public class RobotDrive2 extends LinearOpMode {
                     arm2_servo.setPosition(1);
                 })
                 .build();
-        TrajectorySequence MIDDLE = drive.trajectorySequenceBuilder(startPose)
+        TrajectorySequence MIDDLE1 = drive.trajectorySequenceBuilder(startPose)
 
-                //.lineToLinearHeading(new Pose2d(-36,-23, Math.toRadians(270)))
-                //.strafeRight(5)
+                .lineToLinearHeading(new Pose2d(-36, -23, Math.toRadians(270)))
+                .strafeRight(5)
+                .lineToLinearHeading(new Pose2d(-36, -35, Math.toRadians(270)))
+                .waitSeconds(0.5)
+                .build();
 
-                // move back
-                //.lineToLinearHeading(new Pose2d(-36,-35, Math.toRadians(270)))
-               // .waitSeconds(5)
-                .turn(Math.toRadians(90))
-                //wait for lower arm
-                .waitSeconds(10999)
-                //open claw distance required
+        Pose2d startPose2 = new Pose2d(-34, -32, Math.toRadians(90));
+        TrajectorySequence MIDDLE2 = drive.trajectorySequenceBuilder(startPose2)
                 .back(1)
                 .waitSeconds(0.5)
                 .back(2)
                 .waitSeconds(0.7)
                 .back(3)
-                .lineToLinearHeading(new Pose2d(-36,-58, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(40,-58, Math.toRadians(180)))
+                .build();
+
+        Pose2d startPose3 = new Pose2d(-36, -41, Math.toRadians(180));
+        TrajectorySequence MIDDLE3 = drive.trajectorySequenceBuilder(startPose3)
+                .lineToLinearHeading(new Pose2d(-36, -58, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(40, -58, Math.toRadians(180)))
                 .splineToSplineHeading(new Pose2d(47, -35, Math.toRadians(180)), Math.toRadians(0))
                 .waitSeconds(5)
-                .lineToLinearHeading(new Pose2d(47,-61, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(60,-61, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(47, -61, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(60, -61, Math.toRadians(180)))
                 //.lineToLinearHeading(new Pose2d(47,-12, Math.toRadians(180)))
                 //.lineToLinearHeading(new Pose2d(60,-12, Math.toRadians(180)))
 
@@ -256,7 +257,7 @@ public class RobotDrive2 extends LinearOpMode {
 
         TrajectorySequence LEFT = drive.trajectorySequenceBuilder(startPose)
                 .strafeLeft(5)
-                .lineToLinearHeading(new Pose2d(12,-36, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(12, -36, Math.toRadians(180)))
                 // move back
                 //wait for lower arm
                 .waitSeconds(2)
@@ -266,10 +267,10 @@ public class RobotDrive2 extends LinearOpMode {
                 .back(2)
                 .waitSeconds(0.3)
                 .back(3)
-                .lineToLinearHeading(new Pose2d(51,-26, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(51, -26, Math.toRadians(180)))
                 .waitSeconds(4)
-                .lineToLinearHeading(new Pose2d(51,-61, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(60,-61, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(51, -61, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(60, -61, Math.toRadians(180)))
                 .waitSeconds(30)
 
 
@@ -285,7 +286,7 @@ public class RobotDrive2 extends LinearOpMode {
 
                 })
                 // close claw, raise arm 2
-                .addDisplacementMarker(32,() -> {
+                .addDisplacementMarker(32, () -> {
                     hand_servo.setPosition(0.5);
 
                 })
@@ -346,7 +347,7 @@ public class RobotDrive2 extends LinearOpMode {
                 .addProcessor(propProcessor)
                 .build();
 
-        while(!isStarted()) {
+        while (!isStarted()) {
             if (gamepad1.right_bumper) {
                 hand_servo.setPosition(0.2);
             }
@@ -363,7 +364,7 @@ public class RobotDrive2 extends LinearOpMode {
             telemetry.update();
 
         }
-                waitForStart();
+        waitForStart();
 
         if (isStopRequested()) return;
 
@@ -382,11 +383,22 @@ public class RobotDrive2 extends LinearOpMode {
                 imu.resetYaw();
             }
             switch (PropPosition) {
+
                 case MIDDLE:
                     telemetry.addLine("Running trajectory MIDDLE");
                     telemetry.update();
-                    drive.turn(Math.toRadians(90));
-                    sleep(100000000);
+                    drive.setPoseEstimate(startPose);
+                    drive.followTrajectorySequence(MIDDLE1);
+
+                    drive.turn(Math.toRadians(10.0));
+                    sleep(20000);
+                    drive.setPoseEstimate(startPose2);
+                    drive.followTrajectorySequence(MIDDLE2);
+
+                    sleep(20000);
+                    drive.turn(Math.toRadians(-90.0));
+                    drive.setPoseEstimate(startPose3);
+                    drive.followTrajectorySequence(MIDDLE3);
                     break;
                 case LEFT:
                     telemetry.addLine("Running trajectory LEFT");
