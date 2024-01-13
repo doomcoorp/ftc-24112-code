@@ -32,39 +32,41 @@ public class redmiddleclosetobackdrop {
                                     .back(1)
                                     .waitSeconds(0.5)
                                     .back(2)
-                                    .waitSeconds(0.3)
+                                    .waitSeconds(0.7)
                                     .back(3)
-                                    .splineToSplineHeading(new Pose2d(47, -37, Math.toRadians(180)), Math.toRadians(0))
+                                    .splineToSplineHeading(new Pose2d(49, -35, Math.toRadians(180)), Math.toRadians(0))
                                     .waitSeconds(5)
-                                    .strafeLeft(24)
-                                    .back(13)
+                                    .lineToLinearHeading(new Pose2d(49,-61, Math.toRadians(180)))
+                                    .lineToLinearHeading(new Pose2d(60,-61, Math.toRadians(180)))
                                     .waitSeconds(30)
                                     // lower arm 2
                                     .addDisplacementMarker(53, () -> {
+
                                     })
                                     // open claw
-                                    .addDisplacementMarker(55, () -> {
-
+                                    .addDisplacementMarker(56, () -> {
                                     })
                                     // close claw, raise arm 2
-                                    .addDisplacementMarker(56,() -> {
+                                    .addDisplacementMarker(57,() -> {
+
                                     })
                                     .addDisplacementMarker(58, () -> {
+
                                     })
                                     // raise big arm to backdrop
-                                    .addTemporalMarker(10.4, () -> {
-
+                                    .addTemporalMarker(11.4, () -> {
 
                                     })
+                                    .addTemporalMarker(12, () -> {
 
-
-                                    // open claw
-                                    .addTemporalMarker(12.7, () -> {
+                                    })
+                                    .addTemporalMarker(12.5, () -> {
                                     })
                                     // lower arm and claw
-                                    .addTemporalMarker(15, () -> {
+                                    .addTemporalMarker(12.6, () -> {
 
                                     })
+
                                     .build()
                     );
 

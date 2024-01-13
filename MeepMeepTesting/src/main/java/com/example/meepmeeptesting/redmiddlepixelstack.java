@@ -22,8 +22,9 @@ public class redmiddlepixelstack {
                     .followTrajectorySequence(drive ->
                             drive.trajectorySequenceBuilder(new Pose2d(-36, -61, Math.toRadians(270)))
                                     .lineToLinearHeading(new Pose2d(-36,-23, Math.toRadians(270)))
-                                    // move back
                                     .strafeRight(5)
+
+                                    // move back
                                     .lineToLinearHeading(new Pose2d(-36,-35, Math.toRadians(90)))
                                     //wait for lower arm
                                     .waitSeconds(1)
@@ -31,30 +32,42 @@ public class redmiddlepixelstack {
                                     .back(1)
                                     .waitSeconds(0.5)
                                     .back(2)
-                                    .waitSeconds(0.3)
+                                    .waitSeconds(0.7)
                                     .back(3)
-                                    .strafeLeft(24)
-                                    .lineToLinearHeading(new Pose2d(-60,-12, Math.toRadians(180)))
-                                    .lineToLinearHeading(new Pose2d(40,-12, Math.toRadians(180)))
-                                    .lineToLinearHeading(new Pose2d(47,-37, Math.toRadians(180)))
+                                    .lineToLinearHeading(new Pose2d(-36,-58, Math.toRadians(180)))
+                                    .lineToLinearHeading(new Pose2d(40,-58, Math.toRadians(180)))
+                                    .splineToSplineHeading(new Pose2d(47, -35, Math.toRadians(180)), Math.toRadians(0))
                                     .waitSeconds(5)
-                                    .strafeLeft(24)
-                                    .back(13)
-
-
+                                    .lineToLinearHeading(new Pose2d(47,-61, Math.toRadians(180)))
+                                    .lineToLinearHeading(new Pose2d(60,-61, Math.toRadians(180)))
+                                    .waitSeconds(30)
                                     // lower arm 2
                                     .addDisplacementMarker(53, () -> {
-                                    })
-                                    // open claw
-                                    .addDisplacementMarker(55, () -> {
 
                                     })
+                                    // open claw
+                                    .addDisplacementMarker(56, () -> {
+                                    })
                                     // close claw, raise arm 2
-                                    .addDisplacementMarker(56,() -> {
+                                    .addDisplacementMarker(57,() -> {
+
                                     })
                                     .addDisplacementMarker(58, () -> {
+
                                     })
                                     // raise big arm to backdrop
+                                    .addTemporalMarker(15, () -> {
+                                    })
+                                    .addTemporalMarker(15.6, () -> {
+
+                                    })
+                                    .addTemporalMarker(16.1, () -> {
+                                    })
+                                    // lower arm and claw
+                                    .addTemporalMarker(16.2, () -> {
+
+                                    })
+
                                     .build()
                     );
 

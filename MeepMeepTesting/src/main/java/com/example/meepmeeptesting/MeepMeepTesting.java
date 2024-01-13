@@ -31,20 +31,19 @@ public class MeepMeepTesting {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(12, -61, Math.toRadians(270)))
                                 .strafeLeft(11.5)
-                                .lineToLinearHeading(new Pose2d(23.5 ,-30, Math.toRadians(90)))
-                                .lineToLinearHeading(new Pose2d(23.5,-40, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(24 ,-30, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(24,-40, Math.toRadians(90)))
                                 .waitSeconds(1)
                                 .back(1)
                                 .waitSeconds(0.5)
                                 .back(2)
                                 .waitSeconds(0.3)
                                 .back(3)
-                                .splineToSplineHeading(new Pose2d(47, -42, Math.toRadians(180)), Math.toRadians(0))
-                                .waitSeconds(10)
-                                .strafeLeft(19)
-                                .back(14)
+                                .lineToLinearHeading(new Pose2d(51,-41.5, Math.toRadians(180)))
+                                .waitSeconds(4)
+                                .lineToLinearHeading(new Pose2d(51,-61, Math.toRadians(180)))
+                                .lineToLinearHeading(new Pose2d(60,-61, Math.toRadians(180)))
                                 .waitSeconds(30)
-
                                 // move back
                                 // lower arm 2
                                 .addDisplacementMarker(49, () -> {
