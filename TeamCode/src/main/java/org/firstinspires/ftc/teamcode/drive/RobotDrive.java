@@ -69,14 +69,6 @@ public class RobotDrive extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            if (isMainArmDirectionForward == 1) {
-                left_arm.setDirection(DcMotor.Direction.REVERSE);
-                right_arm.setDirection(DcMotor.Direction.FORWARD);
-            } else {
-                left_arm.setDirection(DcMotor.Direction.FORWARD);
-                right_arm.setDirection(DcMotor.Direction.REVERSE);
-            }
-
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
@@ -105,7 +97,16 @@ public class RobotDrive extends LinearOpMode {
 
             // Change to lowering / raising
             if (gamepad1.y) {
-                isMainArmDirectionForward = isMainArmDirectionForward*-1;
+                if (isMainArmDirectionForward == 1) {
+                    left_arm.setDirection(DcMotor.Direction.REVERSE);
+                    right_arm.setDirection(DcMotor.Direction.FORWARD);
+                    isMainArmDirectionForward = 0;
+                } else {
+                    left_arm.setDirection(DcMotor.Direction.FORWARD);
+                    right_arm.setDirection(DcMotor.Direction.REVERSE);
+                    isMainArmDirectionForward = 1;
+                }
+                //isMainArmDirectionForward = isMainArmDirectionForward*-1;
             }
 
             // you can ignore this, this kind of was a test to see if we could put stuff onto the backdrop from the front
