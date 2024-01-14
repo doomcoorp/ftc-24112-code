@@ -65,6 +65,17 @@ public class redrightpixelstack {
                 // Background opacity from 0-1
                 .setBackgroundAlpha(1f)
                 .addEntity(myBot)
+                .addEntity(myBot)
+                .addEntity(myBot)
+                .addEntity(myBot)
+                .addEntity(myBot)
+                .addEntity(myBot)
+                .addEntity(myBot)
+                .addEntity(myBot)
+                .addEntity(myBot)
+                .addEntity(myBot)
+                .addEntity(myBot)
+                .addEntity(myBot)
                 .start();
     }
 }

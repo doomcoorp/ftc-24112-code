@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive.tuningOpmodes;
 
-import androidx.annotation.NonNull;
+import  androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
@@ -103,6 +103,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
+        imu.resetYaw();
 
 
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
