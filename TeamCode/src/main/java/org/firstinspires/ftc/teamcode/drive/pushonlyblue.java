@@ -30,7 +30,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
  */
 
 @Config
-@Autonomous(group = "AWD",name = "blueautonopush")
+@Autonomous(group = "AWD",name = "Blue auto near backdrop")
 public class pushonlyblue extends LinearOpMode {
     private VisionPortal visionPortal;
     private PropProcessor propProcessor;

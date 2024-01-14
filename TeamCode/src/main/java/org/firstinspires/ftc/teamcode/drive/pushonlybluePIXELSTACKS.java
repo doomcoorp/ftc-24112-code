@@ -30,7 +30,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
  */
 
 @Config
-@Autonomous(group = "AWD",name = "blueautonopushPIXELSTACKS")
+@Autonomous(group = "AWD",name = "Blue auto near pixel stacks ")
 public class pushonlybluePIXELSTACKS extends LinearOpMode {
     private VisionPortal visionPortal;
     private PropProcessor propProcessor;
@@ -80,8 +80,8 @@ public class pushonlybluePIXELSTACKS extends LinearOpMode {
                 .waitSeconds(1)
                 //open claw distance required
                 .back(2)
-                .lineToLinearHeading(new Pose2d(-48,12, Math.toRadians(90)))
-                .lineToLinearHeading(new Pose2d(-34,12, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-48,8, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-34,8, Math.toRadians(90)))
 
                 .lineToLinearHeading(new Pose2d(-34,59, Math.toRadians(90)))
                 .lineToLinearHeading(new Pose2d(40,59, Math.toRadians(90)))
@@ -304,8 +304,8 @@ public class pushonlybluePIXELSTACKS extends LinearOpMode {
                     drive.followTrajectorySequence(MIDDLE3);*/
                     break;
                 case LEFT:
-                    telemetry.addLine("Running trajectory LEFT");
-                    drive.followTrajectorySequence(LEFT);
+                    telemetry.addLine("Running trajectory LEFT (its actually right)");
+                    drive.followTrajectorySequence(RIGHT);
                     telemetry.update();
                     break;
                 case RIGHT:

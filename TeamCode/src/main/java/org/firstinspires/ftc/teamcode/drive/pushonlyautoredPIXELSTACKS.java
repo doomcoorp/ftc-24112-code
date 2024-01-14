@@ -30,7 +30,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
  */
 
 @Config
-@Autonomous(group = "AWD",name = "redautopixelstacksPUSHONLY")
+@Autonomous(group = "AWD",name = "Red auto near pixel stacks")
 public class pushonlyautoredPIXELSTACKS extends LinearOpMode {
     private VisionPortal visionPortal;
     private PropProcessor propProcessor;
@@ -239,14 +239,14 @@ hand_servo.setPosition(0.5);
 
         TrajectorySequence LEFT = drive.trajectorySequenceBuilder(startPose)
                 .strafeRight(12)
-                .lineToLinearHeading(new Pose2d(-48,-12, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(-48,-20, Math.toRadians(270)))
                 // move back
                 //wait for lower arm
                 .waitSeconds(1)
                 //open claw distance required
                 .back(2)
-                .lineToLinearHeading(new Pose2d(-48,-12, Math.toRadians(270)))
-                .lineToLinearHeading(new Pose2d(-34,-12, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(-48,-8, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(-34,-8, Math.toRadians(270)))
 
                 .lineToLinearHeading(new Pose2d(-34,-59, Math.toRadians(270)))
                 .lineToLinearHeading(new Pose2d(40,-59, Math.toRadians(270)))
@@ -256,17 +256,17 @@ hand_servo.setPosition(0.5);
 
                 .waitSeconds(30)
                 // lower arm 2
-                .addDisplacementMarker(60, () -> {
+                .addDisplacementMarker(52, () -> {
                     arm2_servo.setPosition(0);
 
 
                 })
                 // open claw
-                .addDisplacementMarker(61, () -> {
+                .addDisplacementMarker(53, () -> {
                     hand_servo.setPosition(0.2);
 
                 })
-                .addDisplacementMarker(66, () -> {
+                .addDisplacementMarker(58, () -> {
                     arm2_servo.setPosition(1);
                     hand_servo.setPosition(0.5);
                 })
@@ -320,8 +320,6 @@ hand_servo.setPosition(0.5);
                     telemetry.update();
                     drive.setPoseEstimate(startPose);
                     drive.followTrajectorySequence(MIDDLE1);
-                    drive.turn(Math.toRadians(0));
-                    sleep(20000);
                    /* drive.setPoseEstimate(startPose2);
                     drive.followTrajectorySequence(MIDDLE2);
 
@@ -336,8 +334,8 @@ hand_servo.setPosition(0.5);
                     telemetry.update();
                     break;
                 case RIGHT:
-                    telemetry.addLine("Running trajectory RIGHT");
-                    drive.followTrajectorySequence(RIGHT);
+                    telemetry.addLine("Running trajectory RIGHT (its actually left)");
+                    drive.followTrajectorySequence(LEFT);
                     telemetry.update();
                     break;
             }
