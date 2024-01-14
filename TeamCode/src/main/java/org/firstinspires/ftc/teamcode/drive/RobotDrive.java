@@ -147,6 +147,7 @@ public class RobotDrive extends LinearOpMode {
             if (gamepad1.b) {
                 arm2_servo.setPosition(0);
             }
+            /* temporarily remove this piece of code, it's too unreliable
             // another big arm test, copied from old code. both going up and down work
             if (gamepad1.a) {
                 if(isMainArmDirectionForward == 1) {
@@ -186,7 +187,7 @@ public class RobotDrive extends LinearOpMode {
                     isMainArmDirectionForward = 1;
                 }
             }
-
+            */
 
             //telemetry
             telemetry.addData("Left front Power", leftFront.getPower());
