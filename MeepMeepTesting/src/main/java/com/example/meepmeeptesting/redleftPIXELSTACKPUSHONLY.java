@@ -8,7 +8,7 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 ;
 
-public class redmiddleclosetobackdropPUSHONLY {
+public class redleftPIXELSTACKPUSHONLY {
     public static void main(String[] args) {
             // Declare a MeepMeep instance
             // With a field size of 800 pixels
@@ -20,37 +20,38 @@ public class redmiddleclosetobackdropPUSHONLY {
                     // Option: Set theme. Default = ColorSchemeRedDark()
                     .setColorScheme(new ColorSchemeRedDark())
                     .followTrajectorySequence(drive ->
-                            drive.trajectorySequenceBuilder(new Pose2d(12, -61, Math.toRadians(270)))
-                                    .lineToLinearHeading(new Pose2d(12,-16, Math.toRadians(270)))
-
+                            drive.trajectorySequenceBuilder(new Pose2d(-36, -61, Math.toRadians(270)))
+                                    .strafeRight(12)
+                                    .lineToLinearHeading(new Pose2d(-48,-20, Math.toRadians(270)))
                                     // move back
                                     //wait for lower arm
                                     .waitSeconds(1)
                                     //open claw distance required
                                     .back(2)
-                                    .waitSeconds(0.5)
-                                    .back(2)
-                                    .waitSeconds(0.7)
-                                    .back(3)
-                                    .lineToLinearHeading(new Pose2d(38,-10, Math.toRadians(270)))
-                                    .lineToLinearHeading(new Pose2d(38,-61, Math.toRadians(270)))
-                                    .lineToLinearHeading(new Pose2d(60,-61, Math.toRadians(270)))
+                                    .lineToLinearHeading(new Pose2d(-48,-12, Math.toRadians(270)))
+                                    .lineToLinearHeading(new Pose2d(-34,-12, Math.toRadians(270)))
+
+                                    .lineToLinearHeading(new Pose2d(-34,-59, Math.toRadians(270)))
+                                    .lineToLinearHeading(new Pose2d(40,-59, Math.toRadians(270)))
+                                    .lineToLinearHeading(new Pose2d(40,-12, Math.toRadians(270)))
+                                    .lineToLinearHeading(new Pose2d(61,-12, Math.toRadians(270)))
+
+
                                     .waitSeconds(30)
                                     // lower arm 2
-                                    .addDisplacementMarker(45, () -> {
+                                    .addDisplacementMarker(52, () -> {
 
                                     })
                                     // open claw
-                                    .addDisplacementMarker(48, () -> {
+                                    .addDisplacementMarker(53, () -> {
                                     })
-                                    // close claw, raise arm 2
-                                    .addDisplacementMarker(49,() -> {
+                                    .addDisplacementMarker(58, () -> {
 
                                     })
-                                    .addDisplacementMarker(50, () -> {
 
-                                    })
-                                    // raise big arm to backdrop
+
+                                    // lower arm 2
+
                                     .build()
                     );
 

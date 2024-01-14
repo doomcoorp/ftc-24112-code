@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode.Auto;
 
 import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.vision.PropProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.opencv.core.Scalar;
-
+@Disabled
 @Autonomous(name = "Opencv", group = "Robot")
 public class VisionTestRed extends OpMode {
     // declare objects
