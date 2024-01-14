@@ -293,9 +293,7 @@ public class pushonlybluePIXELSTACKS extends LinearOpMode {
                     telemetry.update();
                     drive.setPoseEstimate(startPose);
                     drive.followTrajectorySequence(MIDDLE1);
-                    drive.turn(Math.toRadians(0));
-                    sleep(20000);
-                   /* drive.setPoseEstimate(startPose2);
+                                  /* drive.setPoseEstimate(startPose2);
                     drive.followTrajectorySequence(MIDDLE2);
 
                     sleep(20000);

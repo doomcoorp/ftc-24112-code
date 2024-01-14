@@ -360,8 +360,6 @@ hand_servo.setPosition(0.5);
                     telemetry.update();
                     drive.setPoseEstimate(startPose);
                     drive.followTrajectorySequence(MIDDLE1);
-                    drive.turn(Math.toRadians(0));
-                    sleep(20000);
                    /* drive.setPoseEstimate(startPose2);
                     drive.followTrajectorySequence(MIDDLE2);
 
@@ -371,8 +369,8 @@ hand_servo.setPosition(0.5);
                     drive.followTrajectorySequence(MIDDLE3);*/
                     break;
                 case LEFT:
-                    telemetry.addLine("Running trajectory LEFT");
-                    drive.followTrajectorySequence(LEFT);
+                    telemetry.addLine("Case LEFT, running trajetory RIGHT");
+                    drive.followTrajectorySequence(RIGHT);
                     telemetry.update();
                     break;
                 case RIGHT:

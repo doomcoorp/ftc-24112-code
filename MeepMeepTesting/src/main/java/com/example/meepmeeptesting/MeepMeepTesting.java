@@ -30,45 +30,12 @@ public class MeepMeepTesting {
                 .setColorScheme(new ColorSchemeRedDark())
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(12, -61, Math.toRadians(270)))
-                                .strafeLeft(11.5)
-                                .lineToLinearHeading(new Pose2d(24 ,-30, Math.toRadians(90)))
-                                .lineToLinearHeading(new Pose2d(24,-40, Math.toRadians(90)))
-                                .waitSeconds(1)
-                                .back(1)
-                                .waitSeconds(0.5)
-                                .back(2)
-                                .waitSeconds(0.3)
-                                .back(3)
-                                .lineToLinearHeading(new Pose2d(51,-41.5, Math.toRadians(180)))
-                                .waitSeconds(4)
-                                .lineToLinearHeading(new Pose2d(51,-61, Math.toRadians(180)))
-                                .lineToLinearHeading(new Pose2d(60,-61, Math.toRadians(180)))
+                                .lineToLinearHeading(new Pose2d(-34,59, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(40,59, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(40,12, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(61,12, Math.toRadians(90)))
+
                                 .waitSeconds(30)
-                                // move back
-                                // lower arm 2
-                                .addDisplacementMarker(49, () -> {
-                                })
-                                // open claw
-                                .addDisplacementMarker(53, () -> {
-
-                                })
-                                // close claw, raise arm 2
-                                .addDisplacementMarker(56,() -> {
-                                })
-                                .addDisplacementMarker(58, () -> {
-                                })
-                                // raise big arm to backdrop
-                                .addTemporalMarker(10.4, () -> {
-
-                                })
-
-
-                                // open claw
-                                .addTemporalMarker(12.7, () -> {
-                                })
-                                // lower arm and claw
-                                .addTemporalMarker(15, () -> {
-                                })
                                 .build()
                 );
 
