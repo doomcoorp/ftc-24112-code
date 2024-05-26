@@ -20,44 +20,35 @@ public class redrightclosetobackdropPUSHONLY {
                 // Option: Set theme. Default = ColorSchemeRedDark()
                 .setColorScheme(new ColorSchemeRedDark())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, -61, Math.toRadians(270)))
-                                .strafeLeft(5)
-                                .lineToLinearHeading(new Pose2d(12,-36, Math.toRadians(0)))
+                        drive.trajectorySequenceBuilder(new Pose2d(12, 61, Math.toRadians(90)))
+                                .strafeRight(12)
+                                .lineToLinearHeading(new Pose2d(24,20, Math.toRadians(90)))
                                 // move back
-                                .lineToLinearHeading(new Pose2d(12,-35, Math.toRadians(0)))
                                 //wait for lower arm
-                                .waitSeconds(2)
+                                .waitSeconds(1)
                                 //open claw distance required
-                                .back(1)
-                                .waitSeconds(0.5)
                                 .back(2)
-                                .waitSeconds(0.3)
-                                .back(3)
-                                .lineToLinearHeading(new Pose2d(47,-41, Math.toRadians(180)))
-                                .waitSeconds(5)
-                                .strafeLeft(18)
-                                .back(13)
+                                .lineToLinearHeading(new Pose2d(24,12, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(38,12, Math.toRadians(90)))
+
+                                .lineToLinearHeading(new Pose2d(38,61, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(60,61, Math.toRadians(90)))
+
                                 .waitSeconds(30)
                                 // lower arm 2
-                                .addDisplacementMarker(31, () -> {
+                                .addDisplacementMarker(52, () -> {
+
                                 })
                                 // open claw
-                                .addDisplacementMarker(31, () -> {
+                                .addDisplacementMarker(53, () -> {
+                                })
+                                .addDisplacementMarker(58, () -> {
 
                                 })
-                                // close claw, raise arm 2
-                                .addDisplacementMarker(33,() -> {
-                                })
-                                .addDisplacementMarker(35, () -> {
-                                })
-                                .addTemporalMarker(9, () -> {
-                                })
 
-                                .addTemporalMarker(11, () -> {
-                                })
-                                // lower arm and claw
-                                .addTemporalMarker(15, () -> {
-                                })
+
+                                // lower arm 2
+
                                 .build()
                 );
 

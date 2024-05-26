@@ -19,47 +19,17 @@ public class bluemiddle {
                 .setColorScheme(new ColorSchemeRedDark())
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(12, 61, Math.toRadians(90)))
-                                .lineToLinearHeading(new Pose2d(12,23, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(12,16, Math.toRadians(90)))
+
                                 // move back
-                                .strafeRight(5)
-                                .lineToLinearHeading(new Pose2d(12,35, Math.toRadians(270)))
                                 //wait for lower arm
                                 .waitSeconds(1)
                                 //open claw distance required
-                                .back(1)
-                                .waitSeconds(0.5)
                                 .back(2)
-                                .waitSeconds(0.3)
-                                .back(3)
-                                .splineToSplineHeading(new Pose2d(47, 35, Math.toRadians(180)), Math.toRadians(0))
-                                .waitSeconds(10)
-                                .strafeRight(24)
-                                .back(13)
+                                .lineToLinearHeading(new Pose2d(38,10, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(38,61, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(60,61, Math.toRadians(90)))
                                 .waitSeconds(30)
-                                // lower arm 2
-                                .addDisplacementMarker(53, () -> {
-                                })
-                                // open claw
-                                .addDisplacementMarker(55, () -> {
-
-                                })
-                                // close claw, raise arm 2
-                                .addDisplacementMarker(56,() -> {
-                                })
-                                .addDisplacementMarker(58, () -> {
-                                })
-                                // raise big arm to backdrop
-                                .addTemporalMarker(10.4, () -> {
-
-                                })
-
-
-                                // open claw
-                                .addTemporalMarker(12.7, () -> {
-                                })
-                                // lower arm and claw
-                                .addTemporalMarker(15, () -> {
-                                })
                                 .build()
                 );
 
